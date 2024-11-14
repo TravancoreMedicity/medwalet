@@ -1,24 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { lazy, Suspense } from 'react'
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
+const RootLayouts = lazy(() => import('./Layouts/RootLayouts'))
+const ProtectedRoute = lazy(() => import('./routes/ProtectedRoute'))
+const Home = lazy(() => import('./Pages/Home'))
+const Dashboard = lazy(() => import('./Pages/Dashboard'))
+
+export const routes = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayouts />,
+    children: [],
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: '/Home', element: <Home />,
+        children: [
+          { path: 'Dashboard', element: <Dashboard /> },
+        ],
+      },
+    ],
+  },
+]);
+
+const queryClient = new QueryClient()
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Suspense fallback={<div>loding</div>} >
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={routes} />
+      </QueryClientProvider>
+    </Suspense>
   );
 }
 
