@@ -65,3 +65,14 @@ export const infoNofity = (message) => toast.info(message, {
     draggable: true,
     progress: undefined,
 });
+
+
+export   const parkingType = [
+    { name: "Doctors parking", unique: 1 },
+    { name: "Dialysis Parking", unique: 2 },
+    { name: "Mosque Parking", unique: 3 },
+    { name: "Er Parking", unique: 4 },
+    { name: "Temporary Parking", unique: 5 },
+    { name: "Vallet", unique: 6 },
+    { name: "Non Vallet", unique: 7 }
+  ]

@@ -4,7 +4,7 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 const ProtectedRoute = () => {
     const auth_token = true
-    return (auth_token !== null && auth_token !== undefined && true) ? <Outlet /> : <Navigate to="/" replace />
+    return (auth_token !== null && auth_token !== undefined && auth_token === true) ? <Outlet /> : <Navigate to="/" replace />
 }
 
 export default ProtectedRoute

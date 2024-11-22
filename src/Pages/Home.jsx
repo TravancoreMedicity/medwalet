@@ -1,13 +1,13 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import React from 'react';
+import { Box } from '@mui/material';
+import Testcomponent from './Parking/Testcomponent';
 
 const Home = () => {
-    return (
-        <div>
-            <>Home </>
-            <Outlet />
-        </div>
-    )
-}
+  return (
+    <Box >
+      <Testcomponent />
+    </Box>
+  );
+};
 
-export default Home
+export default Home;

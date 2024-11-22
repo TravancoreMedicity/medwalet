@@ -3,34 +3,66 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-
 import {
   QueryClient,
   QueryClientProvider,
-} from '@tanstack/react-query'
+} from '@tanstack/react-query';
+
 
 const RootLayouts = lazy(() => import('./Layouts/RootLayouts'))
 const ProtectedRoute = lazy(() => import('./routes/ProtectedRoute'))
-const Home = lazy(() => import('./Pages/Home'))
 const Dashboard = lazy(() => import('./Pages/Dashboard'))
+const Login = lazy(() => import('./Pages/login/Logiin'))
+const SearchBar = lazy(() => import('./Components/SearchBar'))
+const ParkingType = lazy(() => import('./Pages/Parking/ParkingDetail'))
+const UserMasterDashboard = lazy(()=>import("./Views/Masters/UserMaster/Dashboard"))
+const DriverMain = lazy(()=>import("./Views/Masters/DriverMaster/DriverMain"))
+const Settings = lazy(()=>import("./Modules/Settings/Settings"))
+const ModuleMaster = lazy(()=>import('./Views/Masters/UserMaster/ModuleMaster'))
+const MenuMaster = lazy(()=>import('./Views/Masters/UserMaster/MenuMaster'))
+const ZoneMaster = lazy(()=>import("./Views/Masters/ZoneMaster/ZoneMaster"))
 
 export const routes = createBrowserRouter([
   {
     path: '/',
-    element: <RootLayouts />,
+    element: <Login />,
     children: [],
   },
   {
     element: <ProtectedRoute />,
     children: [
       {
-        path: '/Home', element: <Home />,
+        path: '/Home', element: <RootLayouts />,
         children: [
           { path: 'Dashboard', element: <Dashboard /> },
+          { path: 'parkingdetail', element: <ParkingType /> },
+          { path: 'search', element: <SearchBar /> },
+          { path: 'settings', element: <Settings /> },
         ],
       },
+      {
+        path: '/User', element: <RootLayouts />,
+        children: [
+          { path: 'Dashboard', element: <UserMasterDashboard /> },
+          { path: 'ModuleMaster', element: <ModuleMaster /> },
+          { path: 'MenuMaster', element: <MenuMaster /> },
+        ],
+      },
+      {
+        path: '/Driver', element: <RootLayouts />,
+        children: [
+          { path: 'main', element: <DriverMain /> },
+        ],
+      },
+      {
+        path: '/Zone', element: <RootLayouts />,
+        children: [
+          { path: 'mianpage', element: <ZoneMaster /> },
+        ],
+      }
     ],
   },
+  
 ]);
 
 const queryClient = new QueryClient()
