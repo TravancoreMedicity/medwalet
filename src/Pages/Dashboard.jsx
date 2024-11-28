@@ -1,5 +1,6 @@
-import React, { lazy } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Box } from '@mui/material';
+import LabourSelectBox from '../Components/AutoComplete';
 
 
 
@@ -19,7 +20,7 @@ const Dashboard = () => {
         scrollbarWidth: 'none',
 
       }}>
-        <Testcomponent />
+       <Suspense fallback="loading"> <Testcomponent /></Suspense>
         <FormModal />
         <AllZones />
       </Box>

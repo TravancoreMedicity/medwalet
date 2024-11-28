@@ -2,20 +2,30 @@ import * as React from 'react';
 import Autocomplete from '@mui/joy/Autocomplete';
 import FormControl from '@mui/joy/FormControl';
 
-export default function LabourSelectBox({driverselection,driver}) {
+export default function LabourSelectBox({driverselection ,driver ,setDriverEmpid}) {
   return (
     <FormControl sx={{width:'100%'}}>
       <Autocomplete
         placeholder="Choose Driver"
         options={drivers}
         sx={{width: '100',fontSize: { xs: 12, sm: 16, md: 15, lg: 16 }}}
+        slotProps={{
+          listbox: {
+            sx: {
+              zIndex: 99999, 
+              fontSize: { xs: 12, sm: 16, md: 15, lg: 16 } 
+            },
+          },
+        }}
         onChange={(event, newValue) => {
           if (newValue) {
-            driverselection(newValue.label);
+            driverselection(newValue);
+            setDriverEmpid(newValue.empId)
           }
-          else(
+          else{
             driverselection("")
-          )
+            setDriverEmpid("")
+        }
         }}
         value={driver}
       />
@@ -24,57 +34,57 @@ export default function LabourSelectBox({driverselection,driver}) {
 }
 
 const drivers = [
-    { label: 'Arun Nair', empId: '114817' },
-    { label: 'Preethi Menon', empId: '114818' },
-    { label: 'Vishnu Kumar', empId: '114819' },
-    { label: 'Anjali Reddy', empId: '114820' },
-    { label: 'Akhil George', empId: '114821' },
-    { label: 'Neethu Suresh', empId: '114822' },
-    { label: 'Sanjay Pillai', empId: '114823' },
-    { label: 'Lakshmi Pradeep', empId: '114824' },
-    { label: 'Manoj Nair', empId: '114825' },
-    { label: 'Meera Varma', empId: '114826' },
-    { label: 'Vivek Menon', empId: '114827' },
-    { label: 'Sreeja Thomas', empId: '114828' },
-    { label: 'Ravi Kannan', empId: '114829' },
-    { label: 'Anu Joseph', empId: '114830' },
-    { label: 'Sidharth Raj', empId: '114831' },
-    { label: 'Divya Krishna', empId: '114832' },
-    { label: 'Naveen Varghese', empId: '114833' },
-    { label: 'Shalini David', empId: '114834' },
-    { label: 'Rohit Babu', empId: '114835' },
-    { label: 'Vidya Nair', empId: '114836' },
-    { label: 'Aravind Soman', empId: '114837' },
-    { label: 'Fahad Faizal', empId: '114838' },
-    { label: 'Radhika Krishnan', empId: '114839' },
-    { label: 'Ravindra Kumar', empId: '114840' },
-    { label: 'Nisha Prakash', empId: '114841' },
-    { label: 'Anoop Mohan', empId: '114842' },
-    { label: 'Reshma Sajeev', empId: '114843' },
-    { label: 'Midhun S', empId: '114844' },
-    { label: 'Tina Koshy', empId: '114845' },
-    { label: 'Ramesh Pillai', empId: '114846' },
-    { label: 'Sanjana Thomas', empId: '114847' },
-    { label: 'Ajith Kumar', empId: '114848' },
-    { label: 'Neelima S', empId: '114849' },
-    { label: 'Ratheesh Nair', empId: '114850' },
-    { label: 'Deepa Ravi', empId: '114851' },
-    { label: 'Kiran Raj', empId: '114852' },
-    { label: 'Anjana Menon', empId: '114853' },
-    { label: 'Vishnu Prakash', empId: '114854' },
-    { label: 'Suma Devi', empId: '114855' },
-    { label: 'Sreekanth Krishnan', empId: '114856' },
-    { label: 'Lalitha Babu', empId: '114857' },
-    { label: 'Biju Thomas', empId: '114858' },
-    { label: 'Kavitha Suresh', empId: '114859' },
-    { label: 'Krishna Kumar', empId: '114860' },
-    { label: 'Geetha Menon', empId: '114861' },
-    { label: 'Anil Balan', empId: '114862' },
-    { label: 'Kavya Ramesh', empId: '114863' },
-    { label: 'Jishnu George', empId: '114864' },
-    { label: 'Radhakrishnan', empId: '114865' },
-    { label: 'Shamsudheen', empId: '114866' }
-  ];
+  { label: 'Arun Nair', empId: 114817 },
+  { label: 'Preethi Menon', empId: 114818 },
+  { label: 'Vishnu Kumar', empId: 114819 },
+  { label: 'Anjali Reddy', empId: 114820 },
+  { label: 'Akhil George', empId: 114821 },
+  { label: 'Neethu Suresh', empId: 114822 },
+  { label: 'Sanjay Pillai', empId: 114823 },
+  { label: 'Lakshmi Pradeep', empId: 114824 },
+  { label: 'Manoj Nair', empId: 114825 },
+  { label: 'Meera Varma', empId: 114826 },
+  { label: 'Vivek Menon', empId: 114827 },
+  { label: 'Sreeja Thomas', empId: 114828 },
+  { label: 'Ravi Kannan', empId: 114829 },
+  { label: 'Anu Joseph', empId: 114830 },
+  { label: 'Sidharth Raj', empId: 114831 },
+  { label: 'Divya Krishna', empId: 114832 },
+  { label: 'Naveen Varghese', empId: 114833 },
+  { label: 'Shalini David', empId: 114834 },
+  { label: 'Rohit Babu', empId: 114835 },
+  { label: 'Vidya Nair', empId: 114836 },
+  { label: 'Aravind Soman', empId: 114837 },
+  { label: 'Fahad Faizal', empId: 114838 },
+  { label: 'Radhika Krishnan', empId: 114839 },
+  { label: 'Ravindra Kumar', empId: 114840 },
+  { label: 'Nisha Prakash', empId: 114841 },
+  { label: 'Anoop Mohan', empId: 114842 },
+  { label: 'Reshma Sajeev', empId: 114843 },
+  { label: 'Midhun S', empId: 114844 },
+  { label: 'Tina Koshy', empId: 114845 },
+  { label: 'Ramesh Pillai', empId: 114846 },
+  { label: 'Sanjana Thomas', empId: 114847 },
+  { label: 'Ajith Kumar', empId: 114848 },
+  { label: 'Neelima S', empId: 114849 },
+  { label: 'Ratheesh Nair', empId: 114850 },
+  { label: 'Deepa Ravi', empId: 114851 },
+  { label: 'Kiran Raj', empId: 114852 },
+  { label: 'Anjana Menon', empId: 114853 },
+  { label: 'Vishnu Prakash', empId: 114854 },
+  { label: 'Suma Devi', empId: 114855 },
+  { label: 'Sreekanth Krishnan', empId: 114856 },
+  { label: 'Lalitha Babu', empId: 114857 },
+  { label: 'Biju Thomas', empId: 114858 },
+  { label: 'Kavitha Suresh', empId: 114859 },
+  { label: 'Krishna Kumar', empId: 114860 },
+  { label: 'Geetha Menon', empId: 114861 },
+  { label: 'Anil Balan', empId: 114862 },
+  { label: 'Kavya Ramesh', empId: 114863 },
+  { label: 'Jishnu George', empId: 114864 },
+  { label: 'Radhakrishnan', empId: 114865 },
+  { label: 'Shamsudheen', empId: 114866 }
+];
 
 //   { label: 'The Shawshank Redemption', year: 1994 },
 //   { label: 'The Godfather', year: 1972 },

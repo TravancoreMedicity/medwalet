@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -14,19 +14,23 @@ import CarRentalIcon from '@mui/icons-material/CarRental';
 import PersonIcon from '@mui/icons-material/Person';
 import GolfCourseIcon from '@mui/icons-material/GolfCourse';
 import { Typography } from '@mui/material';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const logo = require("../assets/logo.png");
 
 const newlogo = require("../assets/logo/medlogo.png")
 
 const DrawerComponent = ({ open, toggleDrawer }) => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  const handleNavigation = (route) => {
-    navigate(route); 
-    toggleDrawer(false); 
-  };
+  const handleNavigation = useCallback((route) => {
+   
+    toggleDrawer(false);  
+    setTimeout(() => {
+      navigate(route);  
+    }, 150); 
+  }, [navigate, toggleDrawer]);
+  
 
   const DrawerList = (
     <Box sx={{ width: { xs: 250, sm: 350, height: '100vh' } }} role="presentation" onClick={toggleDrawer(false)}>
@@ -39,16 +43,16 @@ const DrawerComponent = ({ open, toggleDrawer }) => {
           <ListItem key={text} disablePadding>
             <ListItemButton sx={{ mt: 2 }} onClick={() => handleNavigation(
               text === 'DashBoard' ? '/Home/dashboard' :
-              text === 'Slot Master' ? '/Home/dashboard' :
-              text === 'Zone Master' ? '/Zone/mianpage' :
-              text === 'User Master' ? '/User/Dashboard' : '/Driver/main'
+                text === 'Slot Master' ? '/Slot/mainpage' :
+                  text === 'Zone Master' ? '/Zone/mainpage' :
+                    text === 'User Master' ? '/User/mainpage' : '/Driver/main'
             )}>
               <ListItemIcon>
-                  {text === 'DashBoard' && <DashboardIcon sx={{ fontSize: 32, color: "black" }} />}
-                  {text === 'Zone Master' && <EmojiPeopleIcon sx={{ fontSize: 32, color: "black" }} />}
-                  {text === 'Slot Master' && <GolfCourseIcon sx={{ fontSize: 32, color: "black" }} />}
-                  {text === 'User Master' && <PersonIcon sx={{ fontSize: 32, color: "black" }} />}
-                  {text === 'Driver Master' && <CarRentalIcon sx={{ fontSize: 32, color: "black" }} />}
+                {text === 'DashBoard' && <DashboardIcon sx={{ fontSize: 32, color: "black" }} />}
+                {text === 'Zone Master' && <EmojiPeopleIcon sx={{ fontSize: 32, color: "black" }} />}
+                {text === 'Slot Master' && <GolfCourseIcon sx={{ fontSize: 32, color: "black" }} />}
+                {text === 'User Master' && <PersonIcon sx={{ fontSize: 32, color: "black" }} />}
+                {text === 'Driver Master' && <CarRentalIcon sx={{ fontSize: 32, color: "black" }} />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
@@ -66,3 +70,8 @@ const DrawerComponent = ({ open, toggleDrawer }) => {
 };
 
 export default DrawerComponent;
+
+
+
+
+

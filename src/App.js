@@ -9,18 +9,19 @@ import {
 } from '@tanstack/react-query';
 
 
+
+
 const RootLayouts = lazy(() => import('./Layouts/RootLayouts'))
 const ProtectedRoute = lazy(() => import('./routes/ProtectedRoute'))
 const Dashboard = lazy(() => import('./Pages/Dashboard'))
 const Login = lazy(() => import('./Pages/login/Logiin'))
 const SearchBar = lazy(() => import('./Components/SearchBar'))
 const ParkingType = lazy(() => import('./Pages/Parking/ParkingDetail'))
-const UserMasterDashboard = lazy(()=>import("./Views/Masters/UserMaster/Dashboard"))
 const DriverMain = lazy(()=>import("./Views/Masters/DriverMaster/DriverMain"))
 const Settings = lazy(()=>import("./Modules/Settings/Settings"))
-const ModuleMaster = lazy(()=>import('./Views/Masters/UserMaster/ModuleMaster'))
-const MenuMaster = lazy(()=>import('./Views/Masters/UserMaster/MenuMaster'))
 const ZoneMaster = lazy(()=>import("./Views/Masters/ZoneMaster/ZoneMaster"))
+const UserMaster =  lazy(()=>import("./Views/Masters/UserMaster/UserMaster"))
+const SlotMaster =  lazy(()=>import('./Views/Masters/SlotMaster/SlotMaster'));
 
 export const routes = createBrowserRouter([
   {
@@ -43,9 +44,7 @@ export const routes = createBrowserRouter([
       {
         path: '/User', element: <RootLayouts />,
         children: [
-          { path: 'Dashboard', element: <UserMasterDashboard /> },
-          { path: 'ModuleMaster', element: <ModuleMaster /> },
-          { path: 'MenuMaster', element: <MenuMaster /> },
+          { path: 'mainpage', element: <UserMaster /> },
         ],
       },
       {
@@ -57,7 +56,13 @@ export const routes = createBrowserRouter([
       {
         path: '/Zone', element: <RootLayouts />,
         children: [
-          { path: 'mianpage', element: <ZoneMaster /> },
+          { path: 'mainpage', element: <ZoneMaster /> },
+        ],
+      },
+      {
+        path: '/Slot', element: <RootLayouts />,
+        children: [
+          { path: 'mainpage', element: <SlotMaster /> },
         ],
       }
     ],

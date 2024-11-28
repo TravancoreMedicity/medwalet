@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Header from './Header'
 import DrawerComponent from './Sidebar'
-import { useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import BackButton from '../Components/BackButton';
 
@@ -9,20 +9,24 @@ const RootLayouts = () => {
 
     const [open, setOpen] = useState(false);
     const isSmallScreen = useMediaQuery('(max-width:600px)');
-  
-    const toggleDrawer = (value) => () => {
-      setOpen(value);
-    };
+
+
+    const toggleDrawer = (inOpen) => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+          return;
+        }
+        setOpen(inOpen);
+      };
 
     return (
-        <div>
+        <Box>
             <Header toggleDrawer={toggleDrawer} isSmallScreen={isSmallScreen} />
             {/* Drawer Component */}
             <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
 
-            <BackButton/>
-            <Outlet/>
-        </div>
+            <BackButton />
+            <Outlet />
+        </Box>
     )
 }
 

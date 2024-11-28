@@ -76,3 +76,10 @@ export   const parkingType = [
     { name: "Vallet", unique: 6 },
     { name: "Non Vallet", unique: 7 }
   ]
+
+
+  export const employeeID = () => {
+    const userinfo = sessionStorage.getItem('userDetl');
+    const employeeID = userinfo ? JSON.parse(sessionStorage.getItem('userDetl')).empid : 0;
+    return employeeID;
+};

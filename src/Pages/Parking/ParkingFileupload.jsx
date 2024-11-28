@@ -4,6 +4,7 @@ import SvgIcon from '@mui/joy/SvgIcon';
 import { Box, styled } from '@mui/joy';
 import Badge from '@mui/material/Badge';
 import { Typography } from '@mui/material';
+import { warningNofity } from '../../Constant/Constant';
 
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -17,12 +18,16 @@ const VisuallyHiddenInput = styled('input')`
   width: 1px;
 `;
 
-export default function InputFileUpload({ setSelectedFile, setPreview, selectedFile, preview ,setPaymentFile,setPayPreview ,paymentFile,paypreview}) {
-
-
-  
-  
-  
+export default function InputFileUpload({
+  setSelectedFile,
+  setPreview,
+  selectedFile,
+  preview,
+  setPaymentFile,
+  setPayPreview,
+  paymentFile,
+  paypreview
+}) {
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -33,38 +38,50 @@ export default function InputFileUpload({ setSelectedFile, setPreview, selectedF
     },
   }));
 
-
-
   const removefile = (index) => {
-    const newFiles = selectedFile.filter((_, i) => i !== index);
-    const newPreviews = preview.filter((_, i) => i !== index)
-    const newPaymentFile = paymentFile.filter((_, i) => i !== index);
-    const newPaymentreview = preview.filter((_, i) => i !== index)
 
-
-    setPaymentFile(newPaymentFile)
-    setPayPreview(newPaymentreview)
-    setSelectedFile(newFiles)
-    setPreview(newPreviews)
+    if (selectedFile) {
+      const newFiles = selectedFile?.filter((_, i) => i !== index);
+      const newPreviews = preview?.filter((_, i) => i !== index)
+      setSelectedFile(newFiles)
+      setPreview(newPreviews)
+    }
+    if (paymentFile) {
+      const newPaymentFile = paymentFile?.filter((_, i) => i !== index);
+      const newPaymentreview = paypreview?.filter((_, i) => i !== index)
+      setPaymentFile(newPaymentFile)
+      setPayPreview(newPaymentreview)
+    }
   }
 
   const handleFileChange = (e) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    const validExtensions = ['image/jpeg', 'image/png', 'image/jpg'];
+    const hasInvalidFiles = Array.from(files).some(
+      (file) => !validExtensions.includes(file.type)
+    );
+
+    if (hasInvalidFiles) {
+      warningNofity("Only JPG, JPEG, and PNG formats are allowed!");
+      return;
+    }
+
     const newFiles = Array.from(files);
-    const newPreviews = newFiles.map((file) => URL.createObjectURL(file))
+    const newPreviews = newFiles?.map((file) => URL.createObjectURL(file))
 
-if(selectedFile){
-  setSelectedFile((prev) => [...prev, ...newFiles])
-  setPreview((prev) => [...prev, ...newPreviews])
-}else{
-  setPaymentFile((prev) => [...prev, ...newFiles])
-  setPayPreview((prev) => [...prev, ...newPreviews])
-}
-   
+    if (selectedFile) {
+      setSelectedFile((prev) => [...prev, ...newFiles])
+      setPreview((prev) => [...prev, ...newPreviews])
+    }
 
-   
+    if (paymentFile) {
+      setPaymentFile((prev) => [...prev, ...newFiles])
+      setPayPreview((prev) => [...prev, ...newPreviews])
+    }
+
+
     // Optionally 
     //The below code helps to clean up the object URL on component unmount
     return () => newFiles.forEach((file) => URL.revokeObjectURL(file));;
@@ -100,7 +117,7 @@ if(selectedFile){
           </SvgIcon>
         }
       >
-        Upload a file
+        Upload  Image
         <VisuallyHiddenInput type="file" onChange={(e) => handleFileChange(e)} multiple />
       </Button>
 

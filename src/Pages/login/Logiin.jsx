@@ -1,6 +1,9 @@
 import { Grid, Box, Typography } from '@mui/joy';
 import React, { lazy } from 'react';
 import logo from "../../assets/MEDICAL COLLEGE LOGO.png"
+import  medvallet from '../../assets/logo/medvallet.jpg'
+import  icon1 from '../../assets/logo/icon1.png'
+import  newicon from '../../assets/logo/newicon.png'
 
 const Loginform = lazy(()=>import('./Loginform'))
 
@@ -30,12 +33,12 @@ function Login() {
     
       const typographyStyles = {
         width: '300px',
-        mt: { xs: 2, sm: 0 },
+        mt: { xs: 2, sm: 4 },
         fontFamily: { xs: 'fantasy', sm: 'cursive' },
         fontWeight: { xs: 700, sm: 400 },
         color: '#3C3D37',
         fontSize: { xs: 10, sm: 16 },
-        display: { xs: 'none', sm: 'block' },
+        display: { xs: 'none', sm: 'block' }
       };
 
 
@@ -51,9 +54,9 @@ function Login() {
         >
             <Grid  xs={12} sm={12} md={6} sx={{ height: { xs: '40vh', sm: '20vh', md: "100%" } }}>
                 <Box sx={boxStyles}>
-                    <Box sx={{  width: { xs: 220, sm: 400 }, height: { xs: 120, sm: 150 } }} >
+                    <Box sx={{  width: { xs: 200, sm: 220 }, height: { xs: 180, sm: 150 } }} >
                         <img
-                            src={logo}
+                            src={newicon}
                             alt=""
                             width={'100%'}
                             height={'100%'}

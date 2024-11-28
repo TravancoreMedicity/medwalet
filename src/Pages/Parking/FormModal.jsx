@@ -9,7 +9,7 @@ import Divider from '@mui/material/Divider';
 
 
 
-const ValletForm = React.lazy(()=>import("./ValletForm"))
+const ValletForm = React.lazy(() => import("./ValletForm"))
 
 
 export default function FormModal() {
@@ -27,7 +27,7 @@ export default function FormModal() {
                 aria-describedby="modal-desc"
                 open={open}
                 onClose={() => setOpen(false)}
-                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999 }}
             >
                 <Sheet
                     variant="outlined"
@@ -42,23 +42,44 @@ export default function FormModal() {
                             display: 'none',
                         },
                         scrollbarWidth: 'none',
-
                     }}
                 >
-                    <ModalClose variant="plain" sx={{ m: 1 }} />
-                    <Typography
-                        component="h2"
-                        id="modal-title"
-                        level="h4"
-                        textColor="inherit"
-                        sx={{ fontWeight: 'lg', mb: 1 }}
+                    <Box
+                        sx={{
+                            position: 'sticky',
+                            top: -16,
+                            zIndex: 999,
+                            width: '100%',
+                            py: {xs:1,sm:2},
+                            boxShadow: 'sm',
+                            bgcolor: 'white',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}
                     >
-                        Vehicle Information
-                    </Typography>
-                    <Divider sx={{ mb: 1 }} />
+                        <Typography
+                            component="h2"
+                            id="modal-title"
+                            level="h4"
+                            textColor="inherit"
+                            sx={{ fontWeight: 'lg' }}
+                        >
+                            Vehicle Information
+                        </Typography>
+                        <ModalClose
+                            variant="plain"
+                            sx={{
+                                zIndex: 1000,
+                            }}
+                        />
+                    </Box>
+                    <Divider sx={{ mb: 2 }} />
                     <ValletForm setOpen={setOpen} />
                 </Sheet>
             </Modal>
+
+
         </>
     );
 }

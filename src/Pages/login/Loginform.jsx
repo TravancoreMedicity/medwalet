@@ -65,7 +65,22 @@ function Loginform() {
         if (data.success  === 0) {
           errorNofity("User does not Exist")
         } else {
-          sessionStorage.setItem('userDetl', JSON.stringify({ token: data.token }));
+          console.log(data);
+          const loggedDetl = {
+            user: data.user,
+            token: data.token,
+            empno: data.emp_no,
+            empid: data.emp_id,
+            empname: data.emp_name,
+            empdeptsec: data.emp_sec,
+            empsecid: data.emp_secid,
+            empdept: data.emp_dept,
+            empdeptname: data.dept_name,
+            apptoken: data.app_token,
+            logOut: data.logOutTime
+          }
+         // sessionStorage.setItem('userDetl', JSON.stringify({ token: data.token }));
+         sessionStorage.setItem('userDetl', JSON.stringify(loggedDetl));
           succesNofity('Login suceessFully')
           navigate('/Home/Dashboard')
         }

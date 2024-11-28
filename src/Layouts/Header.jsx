@@ -3,30 +3,23 @@ import { Box, Button, Tooltip, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Input from '@mui/joy/Input';
 import LogoutIcon from '@mui/icons-material/Logout';
-import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import SearchSharpIcon from '@mui/icons-material/SearchSharp';
 import { useNavigate } from 'react-router-dom';
-import { RequestPageOutlined } from '@mui/icons-material';
 
 
-
-
-const logo = require("../assets/logo.png")
 
 const newlogo = require("../assets/logo/medlogo.png")
 
+const Header = ({ toggleDrawer, isSmallScreen  }) => {
 
-
-const Header = ({ toggleDrawer, isSmallScreen }) => {
     const navigate = useNavigate()
     const gotoSerachPage = () => {
         navigate("/Home/search")
     }
 
-
     const hanldelogout = () => {
-        console.log("logout successfully");
-
+        sessionStorage.removeItem('userDetl');
+        navigate('/')
     }
 
     return (
@@ -44,8 +37,6 @@ const Header = ({ toggleDrawer, isSmallScreen }) => {
             zIndex: 1100,
             bgcolor: '#53B6E7'
         }}>
-
-
             <Box sx={{
                 width: { xs: '80%', sm: '35%', md: '50%', lg: '65%' }, height: '100%', display: 'flex',
                 alignItems: 'center'
@@ -95,7 +86,6 @@ const Header = ({ toggleDrawer, isSmallScreen }) => {
                     )
                 }
             </Box>
-
         </Box>
     );
 };

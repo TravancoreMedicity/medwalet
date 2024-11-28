@@ -30,3 +30,36 @@ export const getDepartmentEmployee = async (id) =>{
         }
     })
 }
+
+
+export const getAllZoneMaster = async () =>{
+    return axioslogin.get(`/medvallet/getAllzoneMaster`).then((res)=>{
+        const {success,data} = res.data;
+        if(success === 1){
+            return data
+        }
+    })
+}
+
+
+export const getAllUserMaster = async () =>{
+    return axioslogin.get(`/medvallet/getAlluserMaster`).then((res)=>{
+        const {success,data} = res.data;
+        if(success === 1){
+            return data
+        }
+    })
+}
+export const getAllSlotMaster = async () =>{
+    return axioslogin.get(`/medvallet/getAllSlotMaster`).then((res)=>{
+        const {success,data} = res.data;
+        if(success === 1){
+            return data
+        }
+    })
+}
+
+
+
+
+
