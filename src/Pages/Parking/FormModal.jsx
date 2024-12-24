@@ -1,33 +1,58 @@
-import * as React from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import Button from '@mui/joy/Button';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
-import { Box } from '@mui/material';
-import Divider from '@mui/material/Divider';
+import { Box, useMediaQuery } from '@mui/material';
+import AddButton from '../../Components/AddButton';
+import ControlledOpenSpeedDial from '../../Components/SpeedDial';
+import CircularProgressOnTop from '../../Components/CircularProgress';
 
 
 
-const ValletForm = React.lazy(() => import("./ValletForm"))
+const ValletForm = lazy(() => import("./ValletForm"))
+// const ValletForm = lazy(() => import("../../Views/CommonComponents/Practise"))
 
-
-export default function FormModal() {
-    const [open, setOpen] = React.useState(false);
+export default function FormModal({ refetch, allvehicles }) {
+    const [open, setOpen] = useState(false);
+    const isSmallScreen = useMediaQuery('(max-width:600px)');
 
     return (
         <>
-            <Box sx={{ width: '100%', height: 40, display: 'flex', justifyContent: 'end', px: { xs: 1, sm: 2 } }}>
-                <Button variant="soft" color="primary" onClick={() => setOpen(true)} >
-                    Add New Vehicle
-                </Button>
-            </Box>
+
+            {
+                !isSmallScreen ? (
+                    <Box sx={{
+                        width: '100%',
+                        height: 40,
+                        display: 'flex',
+                        justifyContent: 'end',
+                        px: { xs: 2, sm: 2 },
+                    }}>
+                        <Button
+                            variant="soft"
+                            color="primary"
+                            onClick={() => setOpen(true)} >
+                            Add New Vehicle
+                        </Button>
+                    </Box>
+                ) : (
+                    <ControlledOpenSpeedDial
+                        setOpen={setOpen} />
+                )
+            }
             <Modal
                 aria-labelledby="modal-title"
                 aria-describedby="modal-desc"
                 open={open}
                 onClose={() => setOpen(false)}
-                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999 }}
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999
+                }}
             >
                 <Sheet
                     variant="outlined"
@@ -50,12 +75,14 @@ export default function FormModal() {
                             top: -16,
                             zIndex: 999,
                             width: '100%',
-                            py: {xs:1,sm:2},
+                            py: { xs: 1, sm: 2 },
                             boxShadow: 'sm',
                             bgcolor: 'white',
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
+                            borderBottom: '1px solid #e9ecef',
+                            mb: 2
                         }}
                     >
                         <Typography
@@ -74,8 +101,15 @@ export default function FormModal() {
                             }}
                         />
                     </Box>
-                    <Divider sx={{ mb: 2 }} />
-                    <ValletForm setOpen={setOpen} />
+                    <Suspense
+                        fallback={<CircularProgressOnTop />}
+                    >
+                        <ValletForm
+                            allvehicles={allvehicles}
+                            setOpen={setOpen}
+                            refetch={refetch}
+                        />
+                    </Suspense>
                 </Sheet>
             </Modal>
 
@@ -83,3 +117,4 @@ export default function FormModal() {
         </>
     );
 }
+

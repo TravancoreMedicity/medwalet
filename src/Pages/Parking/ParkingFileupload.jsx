@@ -26,7 +26,9 @@ export default function InputFileUpload({
   setPaymentFile,
   setPayPreview,
   paymentFile,
-  paypreview
+  paypreview,
+  current,
+  limit
 }) {
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -54,6 +56,9 @@ export default function InputFileUpload({
     }
   }
 
+  
+  
+
   const handleFileChange = (e) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -71,6 +76,24 @@ export default function InputFileUpload({
     const newFiles = Array.from(files);
     const newPreviews = newFiles?.map((file) => URL.createObjectURL(file))
 
+    if( selectedFile && selectedFile?.length + newFiles?.length > 5 -limit ){
+      if((5-limit) <= 0) {
+        warningNofity(` Max files Uploaded.`);
+      }else{
+        warningNofity(` only select ${ 5 - limit} files.`);
+      }  
+      return;
+    }
+
+    if (selectedFile && selectedFile.length + newFiles.length > 5) {
+      warningNofity("You can upload a maximum of 5 files.");
+      return;
+    }
+    if (paymentFile && paymentFile.length + newFiles.length > 2) {
+      warningNofity("You can upload a maximum of 2 payment files.");
+      return;
+    }
+
     if (selectedFile) {
       setSelectedFile((prev) => [...prev, ...newFiles])
       setPreview((prev) => [...prev, ...newPreviews])
@@ -80,15 +103,10 @@ export default function InputFileUpload({
       setPaymentFile((prev) => [...prev, ...newFiles])
       setPayPreview((prev) => [...prev, ...newPreviews])
     }
-
-
     // Optionally 
     //The below code helps to clean up the object URL on component unmount
     return () => newFiles.forEach((file) => URL.revokeObjectURL(file));;
   };
-
-
-
 
   return (
     <div>
@@ -118,14 +136,48 @@ export default function InputFileUpload({
         }
       >
         Upload  Image
-        <VisuallyHiddenInput type="file" onChange={(e) => handleFileChange(e)} multiple />
+        <VisuallyHiddenInput
+          type="file"
+          onChange={(e) => handleFileChange(e)} multiple
+        />
       </Button>
 
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+      <Box
+        sx={{
+          py:selectedFile?.length > 0  || paymentFile?.length > 0 ? 1 :0,
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 1,
+          height:selectedFile?.length > 0  || paymentFile?.length > 0 ? 100 : 0,
+           overflowY: 'auto',
+           '&::-webkit-scrollbar': {
+             display: 'none',
+           }
+        }}>
         {preview?.map((preview, index) => (
-          <StyledBadge key={index} sx={{ cursor: 'pointer' }} >
-            <Box sx={{ width: 100, height: 100, mb: 1, position: 'relative' }}>
-              <Typography onClick={() => removefile(index)} sx={{ position: 'absolute', display: 'flex', zIndex: 9999, right: -10, top: -10 }}>❌</Typography>
+          <StyledBadge
+            key={index}
+            sx={{
+              cursor: 'pointer',
+            }} >
+            <Box
+              sx={{
+                width: current? 70 :100,
+                height:current? 70 :100 ,
+                mb: 1,
+                position: 'relative'
+              }}>
+              <Typography
+                onClick={() => removefile(index)}
+                sx={{
+                  position: 'absolute',
+                  display: 'flex',
+                  zIndex: 9999,
+                  right: -10,
+                  top: -10
+                }}>
+                ❌
+              </Typography>
               <img
                 src={preview}
                 style={{
@@ -138,10 +190,29 @@ export default function InputFileUpload({
             </Box>
           </StyledBadge>
         ))}
-        {paypreview?.map((preview, index) => (
-          <StyledBadge key={index} sx={{ cursor: 'pointer' }} >
-            <Box sx={{ width: 100, height: 100, mb: 1, position: 'relative' }}>
-              <Typography onClick={() => removefile(index)} sx={{ position: 'absolute', display: 'flex', zIndex: 9999, right: -10, top: -10 }}>❌</Typography>
+        {paypreview?.map((preview, index) =>
+        (
+          <StyledBadge
+            key={index}
+            sx={{ cursor: 'pointer' }} >
+            <Box
+              sx={{
+                width: 100,
+                height: 100,
+                mb: 1,
+                position: 'relative'
+              }}>
+              <Typography
+                onClick={() => removefile(index)}
+                sx={{
+                  position: 'absolute',
+                  display: 'flex',
+                  zIndex: 9999,
+                  right: -10,
+                  top: -10
+                }}>
+                ❌
+              </Typography>
               <img
                 src={preview}
                 style={{

@@ -1,97 +1,115 @@
-import React, { useCallback, useState } from 'react'
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { Typography } from '@mui/joy'
 import { Paper } from '@mui/material'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
-import { succesNofity, errorNofity } from '../../Constant/Constant';
+import { succesNofity, errorNofity, sanitizeToNumbers } from '../../Constant/Constant';
 import { ToastContainer } from 'react-toastify';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 
 
 
 
-
 function Loginform() {
 
-
-
-
-
-
-
   const navigate = useNavigate()
-  const [empid, setEmpId] = useState('');
-  const [password, setPassword] = useState('')
-  const [empidError, setEmpidError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+
+  const [userInput, setUserInput] = useState({
+    empid: '',
+    password: ''
+  });
+
+  const [errors, setErrors] = useState({
+    empidError: '',
+    passwordError: ''
+  });
 
 
-  const useLoginDetail = {
-    emp_username: empid,
-    emp_password: password
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const sanitizedValue = sanitizeToNumbers(value);
+    handleError(name, sanitizedValue);
+    setUserInput((prev) => {
+      return { ...prev, [name]: sanitizedValue }
+    })
   }
 
-  const handleusername = (e) => {
-    let value = e.target.value
-    if (!/^\d+$/.test(value)) {
-      setEmpidError("Employee ID should only contain numbers");
-    } else {
-      setEmpidError("");
+  const handleError = (name, value) => {
+    if (name == "empid") {
+      if (value === "") {
+        setErrors((prev) => ({
+          ...prev,
+          empidError: "The field is empty"
+        }))
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          empidError: ""
+        }))
+      }
     }
-    setEmpId(value)
-  }
+    if (name == "password") {
+      if (value === "") {
+        setErrors((prev) => ({
+          ...prev,
+          passwordError: "The password field is empty"
+        }))
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          passwordError: ""
+        }))
+      }
+    }
+  };
 
+
+  const useLoginDetail = useMemo(() => {
+    return {
+      emp_username: userInput.empid,
+      emp_password: userInput.password
+    }
+  })
 
   const handleloginform = useCallback(async () => {
     try {
 
-      if (empid === "") {
-        setEmpidError("Employee Id  is Blank");
-      } else if (password === "") {
-        setPasswordError("Password Field is required")
-      } else {
-        const result = await axioslogin.post("/employee/login", useLoginDetail)
-          .then((response) => {
-            return response
-          })
-          .catch((error) => {
-            return error
-          })
-
-        const data = result.data;
-     
-        if (data.success  === 0) {
-          errorNofity("User does not Exist")
-        } else {
-          console.log(data);
-          const loggedDetl = {
-            user: data.user,
-            token: data.token,
-            empno: data.emp_no,
-            empid: data.emp_id,
-            empname: data.emp_name,
-            empdeptsec: data.emp_sec,
-            empsecid: data.emp_secid,
-            empdept: data.emp_dept,
-            empdeptname: data.dept_name,
-            apptoken: data.app_token,
-            logOut: data.logOutTime
-          }
-         // sessionStorage.setItem('userDetl', JSON.stringify({ token: data.token }));
-         sessionStorage.setItem('userDetl', JSON.stringify(loggedDetl));
-          succesNofity('Login suceessFully')
-          navigate('/Home/Dashboard')
-        }
+      if (userInput.empid === null || userInput.empid === undefined || userInput.empid === "") {
+        setErrors((prev) => ({
+          ...prev,
+          empidError: "Employee Id Field is required"
+        }))
       }
 
+      if (userInput.password === null || userInput.password === undefined || userInput.password === "") {
+        setErrors((prev) => ({
+          ...prev,
+          passwordError: "Password Field is required"
+        }));
+        return;
+      }
 
+      const result = await axioslogin.post("/employee/login", useLoginDetail)
+      const { token, message, emp_id, success } = await result.data;
+
+      if (success === 0) {
+        errorNofity("User does not Exist")
+        return
+      }
+      const loggedDetl = {
+        token: token,
+        empid: emp_id,
+      }
+      sessionStorage.setItem('userDetl', JSON.stringify(loggedDetl));
+      succesNofity(message)
+      navigate('/Home/Dashboard')
     } catch (err) {
-      console.error('Error during login:', err);
-      // throw new Error("Internal server Error Occured")
+      console.log('Error during login:', err);
+      errorNofity('Internal server Error')
     }
-  }, [empid, password]);
+  }, [useLoginDetail]);
 
 
 
@@ -119,29 +137,34 @@ function Loginform() {
         fontWeight: { xs: 100, sm: 400 }
       }}>Login to Medvalet</Typography>
       <TextField
-        sx={{ width: { xs: '100%', sm: '90%' }, marginTop: { xs: 3, sm: 2 }, height: 30, marginBottom: empidError ? 5 : 2, }}
-        id="outlined-password-input"
+        sx={{ width: { xs: '100%', sm: '90%' }, marginTop: { xs: 3, sm: 2 }, height: 30, marginBottom: errors.empidError ? 5 : 2, }}
+        id="outlined-emloyee-input"
         label="Employee Id"
         type="text"
+        size='small'
+        name='empid'
         autoComplete="current-password"
-        onChange={handleusername}
-        error={!!empidError}
-        helperText={empidError}
-        value={empid}
+        onChange={handleChange}
+        error={!!errors.empidError}
+        helperText={errors.empidError}
+        value={userInput.empid}
+
       />
       <TextField
         sx={{
           width: { xs: '100%', sm: '90%' }, marginTop: { xs: 3, sm: 2 }, height: 30,
-          marginBottom: passwordError ? 5 : 2,
+          marginBottom: errors.passwordError ? 5 : 2,
         }}
         id="outlined-password-input"
         label="Password"
         type="password"
+        size='small'
+        name='password'
         autoComplete="current-password"
-        onChange={(e) => setPassword(e.target.value)}
-        error={!!passwordError}
-        helperText={passwordError}
-        value={password}
+        onChange={handleChange}
+        error={!!errors.passwordError}
+        helperText={errors.passwordError}
+        value={userInput.password}
       />
       <Button sx={{
         marginTop: { xs: 4, sm: 2 },
@@ -179,4 +202,4 @@ function Loginform() {
   )
 }
 
-export default Loginform
+export default memo(Loginform) 

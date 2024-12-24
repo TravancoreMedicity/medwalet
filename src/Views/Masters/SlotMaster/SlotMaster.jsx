@@ -19,7 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 
 export default function SlotMaster() {
-  const [slotname, setSlotName] = useState("")
+  const [slotcount, setSlotCount] = useState(0)
   const [slotstatus, setSlotStatus] = useState(false)
   const [updateflag, setUpdateFlag] = useState(0);
   const [updatedata, setUpdateData] = useState({})
@@ -31,7 +31,7 @@ export default function SlotMaster() {
     queryFn: () => getAllZoneMaster(),
   })
 
-
+  // the data is formated for easily displaying it in the Autocomplete component
   const formattedData = allzonemaster ?
     allzonemaster.map((zone) => ({
       slNo: zone.zone_slno,
@@ -42,7 +42,7 @@ export default function SlotMaster() {
 
 
   const insertData = useMemo(()=>({
-    slot_name: slotname,
+    slot_count: slotcount,
     zone_slno: zoneslno,
     slot_status: slotstatus ? 1 : 0,
     create_user:employeeID()
@@ -50,7 +50,7 @@ export default function SlotMaster() {
 
 
   const updateData = useMemo(()=>( {
-    slot_name: slotname,
+    slot_count: slotcount,
     zone_slno: zoneslno,
     slot_status: slotstatus ? 1 : 0,
     create_user: employeeID(),
@@ -59,7 +59,7 @@ export default function SlotMaster() {
 
   
   const resetField = useCallback(() => {
-    setSlotName("")
+    setSlotCount(0)
     setSlotStatus(false)
     setZoneSlNo(null)
 
@@ -70,11 +70,11 @@ export default function SlotMaster() {
     queryFn: () => getAllSlotMaster(),
   })
 
-
+    // the data is formated for easily displaying it in the Master Table
   const formattedslotMaster = allsloteMaster ?
     allsloteMaster.map((slot) => ({
       slNo: slot.slot_slno,
-      UserName: slot.slot_name,
+      Slotcount: slot.slot_count,
       zonemaster: slot.zone_name,
       Status: slot.slot_status === 1 ? 'Active' : 'Inactive',
       zone_sl: slot.zone_slno
@@ -82,9 +82,9 @@ export default function SlotMaster() {
 
 
 
-
+    //insertion and updation of the slot master
   const handleGroupsave = useCallback(async () => {
-    if (slotname === "" || zoneslno === "") {
+    if (slotcount === null || zoneslno === "") {
       return warningNofity("Please Fill the Blank Fields")
     }
     if (updateflag === 0) {
@@ -133,10 +133,10 @@ export default function SlotMaster() {
     }
   });
 
-
+  //defining the column for the master table
   const [colDefs] = useState([
     { field: 'slNo', flex: 1 },
-    { field: 'UserName', flex: 1 },
+    { field: 'Slotcount', flex: 1 },
     { field: 'zonemaster', flex: 1 },
     { field: 'Status', flex: 1 },
     {
@@ -152,10 +152,12 @@ export default function SlotMaster() {
   ]);
 
 
-
+  //fetching the data for updation
   const getEdit = useCallback((params) => {
-    const rowData = params.data;
-    setSlotName(rowData.UserName);
+    const rowData = params.data;    
+    console.log(rowData);
+    
+    setSlotCount(rowData.Slotcount);
     setSlotStatus(rowData.Status === "Active" ? true : false);
     setZoneSlNo(rowData.zone_sl);
     setUpdateFlag(1);
@@ -168,7 +170,7 @@ export default function SlotMaster() {
     <Box sx={{ width: '100%', height: '93vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <ToastContainer />
       <Paper elevation={3} sx={{ width: '98%', height: '95%' }}>
-        <MasterHeader name={"Zone Master"} />
+        <MasterHeader name={"Slot Master"} />
         <Box sx={{ width: '100%', height: '90%', display: 'flex' }}>
           <Box sx={{ width: '30%', height: '100%', px: 2, py: 2 }}>
             <Autocomplete
@@ -180,10 +182,10 @@ export default function SlotMaster() {
 
             />
             <Input
-              value={slotname}
-              onChange={(e) => setSlotName(e.target.value)}
+              value={slotcount === 0 ? "":slotcount}
+              onChange={(e) => setSlotCount(e.target.value)}
               sx={{ width: '100%' }}
-              placeholder='Enter the Slot Name' />
+              placeholder='Enter the Slot Count' />
             <Checkbox label=" Status"
               checked={slotstatus}
               onChange={(e) => setSlotStatus(e.target.checked)}

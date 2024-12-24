@@ -7,7 +7,7 @@ export const axioslogin = Axios.create({
     headers: {
         "Content-Type": 'application/json',
         "Accept": 'application/json',
-        "Accept-Language": "en-GB,en"
+        "Accept-Language": "en-GB,en",
     }
 });
 

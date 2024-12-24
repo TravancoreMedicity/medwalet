@@ -140,7 +140,7 @@ export default function UserMaster() {
         <Box sx={{ width: '100%', height: '93vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ToastContainer />
             <Paper elevation={3} sx={{ width: '98%', height: '95%' }}>
-                <MasterHeader name={"Zone Master"} />
+                <MasterHeader name={"User Master"} />
                 <Box sx={{ width: '100%', height: '90%', display: 'flex' }}>
                     <Box sx={{ width: '30%', height: '100%', px: 2, py: 2 }}>
                         <Input

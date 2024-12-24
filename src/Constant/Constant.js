@@ -15,6 +15,16 @@ export const validateEmail = (email) => {
     return re.test(String(email).toLowerCase());
 };
 
+export const validateId = (value) => {
+    const regex = /^\d+$/;
+    return value != null && regex.test(String(value));
+
+}
+
+export const sanitizeToNumbers = (value) => {
+    return value.replace(/[^0-9]/g, "");
+  };
+
 export const isValidMobileNumber = (mobile) => {
     const regex = /^\d{10}$/;
     return regex.test(mobile);
@@ -24,6 +34,13 @@ export const isValidOTPMobileNumber = (mobile) => {
     const regex = /^\d{12}$/;
     return regex.test(mobile);
 };
+
+export const isValidVehicleNumber = (vehicleNo) => {
+    // const regex = /^[A-Za-z0-9\s]+$/;
+    const regex = /^[A-Za-z0-9]+$/;
+    return regex.test(vehicleNo);
+};
+// validators.js
 
 
 export const succesNofity = (message) => toast.success(message, {
@@ -67,7 +84,7 @@ export const infoNofity = (message) => toast.info(message, {
 });
 
 
-export   const parkingType = [
+export const parkingType = [
     { name: "Doctors parking", unique: 1 },
     { name: "Dialysis Parking", unique: 2 },
     { name: "Mosque Parking", unique: 3 },
@@ -75,10 +92,10 @@ export   const parkingType = [
     { name: "Temporary Parking", unique: 5 },
     { name: "Vallet", unique: 6 },
     { name: "Non Vallet", unique: 7 }
-  ]
+]
 
 
-  export const employeeID = () => {
+export const employeeID = () => {
     const userinfo = sessionStorage.getItem('userDetl');
     const employeeID = userinfo ? JSON.parse(sessionStorage.getItem('userDetl')).empid : 0;
     return employeeID;
