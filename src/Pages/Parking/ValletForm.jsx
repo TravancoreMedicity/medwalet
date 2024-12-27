@@ -56,6 +56,10 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
     });
 
 
+
+   
+    
+
     //handle all states
     const handleInputChange = useCallback((e, field) => {
         const { value } = e.target;
@@ -187,13 +191,20 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
             }));
             hasError = true;
         }
-        if (!slotnumber) {
+        if (slotnumber === 0 && !slotnumber) {
             setFormErrors((prevErrors) => ({
                 ...prevErrors,
-                slotError: "Enter the token number"
+                slotError: "Select the token number"
             }));
             hasError = true;
+        }else{
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                slotError: ""
+            }));
+            hasError = false;
         }
+
         if (!driver) {
             setDriverError("Please Select the driver");
             hasError = true;
@@ -212,8 +223,9 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                 inputError: "Please enter the transaction id"
             }));
             hasError = true;
-        }
+        } 
         return hasError;
+        
     }, [formData, selectedFile, paymentFile, driver, slotnumber]);
 
 
@@ -363,7 +375,6 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                             name="Token Number"
                             placeholder="Enter Token Number"
                             value={slotnumber === 0 || formData.selectZone === 0 ? "" : slotnumber}
-                            disabled
                             onChange={(value) => {
                                 setFormErrors((prevErrors) => ({
                                     ...prevErrors,
@@ -404,7 +415,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                             <Typography sx={{ fontSize: 15 }}>Payment: </Typography>
                             <Box sx={{ fontSize: 16, display: 'flex', alignItems: 'center', gap: 1 }}>
                                 {formData.selectedVallet !== 0 && formData.selectedVallet === 1 ? (
-                                    <Chip color="success" variant="solid" sx={{ px: 2 }}>100 rs</Chip>
+                                    <Chip color="success" variant="solid" sx={{ px: 2 }}>₹100</Chip>
                                 ) : formData.selectedVallet === 2 ? (
                                     <Chip color="danger" variant="solid" sx={{ px: 2 }}>No payment</Chip>
                                 ) : (
@@ -450,6 +461,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                                                 });
                                                 setPayPreview([]);
                                                 setPaymentFile([])
+                                                setFormErrors((prevState) => ({ ...prevState, inputError: "" }));
                                             }}
                                         />
                                     </Suspense>
@@ -487,7 +499,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                                     <>
                                         <Input
                                             sx={{ fontSize: { xs: 11, sm: 16, md: 15, lg: 16 }, mb: 2 }}
-                                            placeholder="100rs"
+                                            placeholder="₹100"
                                             disabled
                                         />
                                     </>

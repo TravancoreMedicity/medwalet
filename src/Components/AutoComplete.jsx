@@ -20,8 +20,6 @@ export default function LabourSelectBox({ driverselection, driver, setDriverEmpi
     },
   });
 
-  
-
   return (
     <FormControl sx={{ width: '100%' }}>
       <Autocomplete

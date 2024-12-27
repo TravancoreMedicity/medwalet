@@ -1,8 +1,7 @@
 import React, { lazy, memo, Suspense } from 'react';
-import { Box, Skeleton } from '@mui/material';
+import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { getAllSlotMaster, getAllVehicles } from '../Views/CommonComponents/useQueryFunctions';
-import server from '../assets/machine-repair.png'
 import ServerDown from '../Components/ServerDown';
 import InitialLoadingSkeleton from '../Components/InitialLoadingSkeleton';
 import VehicleSkeleton from './Parking/Component/VehicleSkeleton';
@@ -10,7 +9,7 @@ import { ToastContainer } from 'react-toastify';
 
 
 
-const Testcomponent = lazy(() => import("./Parking/Testcomponent"))
+const ZoneDetail = lazy(() => import("./Parking/ZoneDetail"))
 const FormModal = lazy(() => import("./Parking/FormModal"))
 const AllZones = lazy(() => import("./Parking/AllZones"))
 
@@ -50,7 +49,7 @@ const Dashboard = () => {
         },
         scrollbarWidth: 'none',
       }}>
-        <Suspense fallback={<InitialLoadingSkeleton />}> <Testcomponent zone={allslotMaster} vehilce={allvehicles} /></Suspense>
+        <Suspense fallback={<InitialLoadingSkeleton />}> <ZoneDetail zone={allslotMaster} vehilce={allvehicles} /></Suspense>
         <Suspense><FormModal refetch={refetch} allvehicles={allvehicles} /></Suspense>
         <Suspense ><AllZones allvehicles={allvehicles} isLoading={isLoading} isError={isError} refetch={refetch} /></Suspense>
       </Box>

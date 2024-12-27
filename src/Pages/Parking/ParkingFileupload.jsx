@@ -5,6 +5,7 @@ import { Box, styled } from '@mui/joy';
 import Badge from '@mui/material/Badge';
 import { Typography } from '@mui/material';
 import { warningNofity } from '../../Constant/Constant';
+import { ToastContainer } from 'react-toastify';
 
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -80,7 +81,7 @@ export default function InputFileUpload({
       if((5-limit) <= 0) {
         warningNofity(` Max files Uploaded.`);
       }else{
-        warningNofity(` only select ${ 5 - limit} files.`);
+        warningNofity(` Only Select ${ 5 - limit} Files.`);
       }  
       return;
     }
@@ -110,6 +111,7 @@ export default function InputFileUpload({
 
   return (
     <div>
+      <ToastContainer/>
       <Button
         sx={{ fontSize: { xs: 10, sm: 14, lg: 15 }, mb: 1 }}
         component="label"
@@ -148,11 +150,11 @@ export default function InputFileUpload({
           display: 'flex',
           flexWrap: 'wrap',
           gap: 1,
-          height:selectedFile?.length > 0  || paymentFile?.length > 0 ? 100 : 0,
+          height:selectedFile?.length > 0  || paymentFile?.length > 0 ? 80 : 0,
            overflowY: 'auto',
            '&::-webkit-scrollbar': {
              display: 'none',
-           }
+           },
         }}>
         {preview?.map((preview, index) => (
           <StyledBadge
@@ -165,7 +167,7 @@ export default function InputFileUpload({
                 width: current? 70 :100,
                 height:current? 70 :100 ,
                 mb: 1,
-                position: 'relative'
+                position: 'relative',
               }}>
               <Typography
                 onClick={() => removefile(index)}
@@ -200,7 +202,7 @@ export default function InputFileUpload({
                 width: 100,
                 height: 100,
                 mb: 1,
-                position: 'relative'
+                position: 'relative',
               }}>
               <Typography
                 onClick={() => removefile(index)}

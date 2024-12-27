@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useState } from 'react'
 import Header from './Header'
 import DrawerComponent from './Sidebar'
-import { Box, useMediaQuery,Skeleton } from '@mui/material';
+import { Box, useMediaQuery, Skeleton } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 

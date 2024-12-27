@@ -1,53 +1,64 @@
-import { Box, Button } from '@mui/joy';
+import { Box } from '@mui/joy';
 import { Paper } from '@mui/material'
-import React, { lazy, memo, Suspense, useCallback, useMemo, useState } from 'react'
-import { ToastContainer } from 'react-toastify'
-import dayjs from 'dayjs';
+import React, { lazy, memo, Suspense, useCallback, useMemo, useRef, useState } from 'react'
 import MasterTable from '../CommonComponents/MasterTable';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 import { errorNofity, warningNofity } from '../../Constant/Constant';
 import { getAllAttendaceReport } from '../CommonComponents/useQueryFunctions';
 import { useQuery } from '@tanstack/react-query';
 import FilterFunctionSkeleton from '../../Components/FilterSkeleton';
-
-
-
+import { format } from 'date-fns';
+import ReportComponents from '../CommonComponents/ReportComponents';
 
 const Searchskeleton = lazy(() => import("../../Components/Searchskeleton"))
-const ReportHeader = lazy(() => import("../../Components/ReportHeader"))
 const FilterFunction = lazy(() => import("../CommonComponents/FilterFunction"))
 const SearchComponent = lazy(() => import("../CommonComponents/SearchComponent"))
 
 function AttendanceReports() {
 
+  const apiRef = useRef();
   const [selectedValue, setSelectedValue] = useState('a');
-  const [start, setStart] = useState(dayjs().format('YYYY-MM-DD'));
-  const [end, setEnd] = useState(dayjs().format('YYYY-MM-DD'));
+  const [start, setStart] = useState(new Date())
+  const [end, setEnd] = useState(new Date());
   const [todayvehicle, setTodayVehicle] = useState([])
   const [vehiclebetweendate, setVehicleBetweenDate] = useState([])
   const [driver, setDriver] = useState("");
   const [driverempid, setDriverEmpid] = useState("")
   const [employeeDetail, setEmployeeDetail] = useState([]);
-  let TodayData = new Date().toISOString().slice(0, 10);
   const [loadingbetweenDate, setLoadingBetweenDate] = useState(false)
 
   const handleChange = useCallback(async (event) => {
-    setSelectedValue(event.target.value);
+    setSelectedValue(event.target.value)
+
     if (event.target.value === 'b') {
-      const vehicleData = await getVehiclesofToday();
-      setTodayVehicle(vehicleData)
+      setLoadingBetweenDate(true)
+      const postData = { currentDate: format(new Date(), 'yyyy-MM-dd') }
+      try {
+        const response = await axioslogin.post('/medvallet/getTodayAttendaceReport', postData);
+        const { success, data } = response.data;
+        if (success === 2) {
+          errorNofity("error in fetching data")
+          setLoadingBetweenDate(false)
+          return
+        }
+        setLoadingBetweenDate(false)
+        setTodayVehicle(data)
+      } catch (error) {
+        console.log("Error fetching today's vehicles:", error);
+      }
       setVehicleBetweenDate([])
       setDriver("")
       setDriverEmpid("")
     }
+
     if (event.target.value === 'a') {
       setVehicleBetweenDate([])
       setTodayVehicle([])
       setDriver("")
       setDriverEmpid("")
     }
-  });
 
+  });
 
   const driverselection = useCallback((driver) => {
     if (!driver) {
@@ -63,33 +74,13 @@ function AttendanceReports() {
 
 
 
-
-
-
-
-  const handleStartDateChange = (newValue) => {
-    const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
-    if (dayjs(formattedDate).isValid()) {
-      setStart(formattedDate);
-    }
-  };
-
-  const handleEndDateChange = (newValue) => {
-    const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
-    if (dayjs(formattedDate).isValid()) {
-      setEnd(formattedDate);
-    }
-  };
-
-  const searchData = useMemo(() => ({
-    driver_id: driverempid
-  }))
-
   const handleEmployeeSearch = useCallback(async () => {
     setSelectedValue("")
     setLoadingBetweenDate(true)
     try {
-      const response = await axioslogin.post('/medvallet/getselectedEmployee', searchData);
+      const response = await axioslogin.post('/medvallet/getselectedEmployee', {
+        driver_id: driverempid
+      });
       const { success, data } = response.data;
       if (success === 2) return errorNofity("error in fetching data")
       setEmployeeDetail(data)
@@ -97,39 +88,19 @@ function AttendanceReports() {
     } catch (err) {
       errorNofity("Error in searching!")
     }
-  }, [searchData])
+  }, [driverempid])
 
-
-  const postData = useMemo(() => ({
-    currentDate: TodayData
-  }), [TodayData]);
-
-  const BothDate = useMemo(() => ({
-    startDate: start,
-    EndDate: end,
-  }), [start, end]);
-
-
-  const getVehiclesofToday = useCallback(async () => {
-    setLoadingBetweenDate(true)
-    try {
-      const response = await axioslogin.post('/medvallet/getTodayAttendaceReport', postData);
-      const { success, data } = response.data;
-      if (success === 2) return errorNofity("error in fetching data")
-      setLoadingBetweenDate(false)
-      return data;
-    } catch (error) {
-      console.error("Error fetching today's vehicles:", error);
-    }
-  }, [postData]);
 
 
   const getVehicleFromStartAndEnd = useCallback(async () => {
     setLoadingBetweenDate(true)
+    const BothDate = {
+      startDate: format(new Date(start), 'yyyy-MM-dd'),
+      EndDate: format(new Date(end), 'yyyy-MM-dd'),
+    }
     try {
       const response = await axioslogin.post('/medvallet/getAttendaceBetweenDate', BothDate);
       const { success, data } = response.data;
-      console.log(data, "Vehicle data");
       if (success === 1 && data.length === 0) {
         warningNofity("No data found")
         setLoadingBetweenDate(false)
@@ -138,9 +109,9 @@ function AttendanceReports() {
       setVehicleBetweenDate(data)
       setLoadingBetweenDate(false)
     } catch (error) {
-      console.error("Error fetching today's vehicles:", error);
+      console.log("Error fetching today's vehicles:", error);
     }
-  }, [BothDate]);
+  }, [start, end]);
 
 
   const MappingData = selectedValue === 'a' && AttendaceReport ? AttendaceReport
@@ -148,9 +119,6 @@ function AttendanceReports() {
       : selectedValue === 'c' ? vehiclebetweendate
         : employeeDetail
 
-
-
-    
 
   const formattedfinalData = useMemo(() => {
     if (!MappingData) return [];
@@ -166,77 +134,64 @@ function AttendanceReports() {
 
   const colDefs = useMemo(
     () => [
-      { field: 'slNo', flex: 2 },
-      { field: 'DriverName', flex: 2 },
-      { field: 'CheckIn', flex: 2 },
-      { field: 'Checkout', flex: 2 },
-      { field: 'TotalCount', flex: 2 },
+      { field: 'slNo', flex: 1 },
+      { field: 'DriverName', flex: 1 },
+      { field: 'CheckIn', flex: 1 },
+      { field: 'Checkout', flex: 1 },
+      { field: 'TotalCount', flex: 1 },
     ],
     []
   );
 
+  const download = useCallback(() => {
+    if (apiRef.current && apiRef.current.api) {
+      apiRef.current.api.exportDataAsCsv();
+    }
+  }, []);
+
+
   return (
-    <Box sx={{
-      height: window.innerHeight - 100,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      p: 1,
-    }}>
-      <ToastContainer />
-      <Paper elevation={3}
-        sx={{
-          flex: 1,
-          height: window.innerHeight - 80,
-          position: 'relative',
-          p: 1
-        }}>
-        <ReportHeader
-          name={'Driver Attendace Reports'}
-          path={'/Reports/mainpage'}
+
+    <ReportComponents
+      title="Driver Attendace Reports"
+      data={[]}
+      displayClose={true}
+      path={'/Reports/mainpage'}
+      onDownload={download}
+
+    >
+      <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+        <Suspense fallback={<FilterFunctionSkeleton />}>
+          <FilterFunction
+            start={start}
+            end={end}
+            selectedValue={selectedValue}
+            handleChange={handleChange}
+            handleStartDateChange={setStart}
+            getVehicleFromStartAndEnd={getVehicleFromStartAndEnd}
+            handleEndDateChange={setEnd}
+          />
+        </Suspense>
+        <Suspense fallback={<Searchskeleton />}>
+          <SearchComponent
+            driverselection={driverselection}
+            driver={driver}
+            setDriverEmpid={setDriverEmpid}
+            handleEmployeeSearch={handleEmployeeSearch}
+
+          />
+        </Suspense>
+      </Box>
+
+      <Paper square elevation={0} sx={{ p: 1, mt: 0.5, display: 'flex', flexDirection: "column", width: "100%" }} >
+        <MasterTable
+          loading={selectedValue === 'a' ? Attendaceloading : loadingbetweenDate}
+          rowData={formattedfinalData}
+          columnDefs={colDefs}
+          apiRef={apiRef}
         />
-        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-          <Suspense fallback={<FilterFunctionSkeleton />}>
-            <FilterFunction
-
-              start={start}
-              end={end}
-              selectedValue={selectedValue}
-              handleChange={handleChange}
-              handleStartDateChange={handleStartDateChange}
-              getVehicleFromStartAndEnd={getVehicleFromStartAndEnd}
-              handleEndDateChange={handleEndDateChange}
-            />
-          </Suspense>
-          <Suspense fallback={<Searchskeleton />}>
-            <SearchComponent
-              driverselection={driverselection}
-              driver={driver}
-              setDriverEmpid={setDriverEmpid}
-              handleEmployeeSearch={handleEmployeeSearch}
-
-            />
-          </Suspense>
-        </Box>
-        <Box
-          sx={{
-            width: '100%',
-            height: {md:'68%'},
-            display: 'flex'
-          }}>
-          <Box sx={{
-            width: '100%',
-            height: '100%'
-          }}>
-            <MasterTable
-              loading={selectedValue === 'a' ? Attendaceloading : loadingbetweenDate}
-              rowData={formattedfinalData}
-              columnDefs={colDefs}
-            />
-          </Box>
-        </Box>
       </Paper>
-    </Box>
+    </ReportComponents>
   )
 }
 

@@ -1,11 +1,16 @@
 import React, { lazy, Suspense } from 'react'
 import { Box, Checkbox, Typography } from '@mui/joy'
 
-
-
 const SlotView = lazy(() => import("../Pages/Parking/Component/SlotView"));
 
-export default function ZoneComponent({ zone, selected, onChange, setSlotNumber, allvehicles, slotselect }) {
+export default function ZoneComponent({
+  zone,
+  selected,
+  onChange,
+  setSlotNumber,
+  allvehicles,
+  slotselect
+}) {
 
   return (
     <Box sx={{

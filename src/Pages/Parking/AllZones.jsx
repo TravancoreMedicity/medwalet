@@ -31,7 +31,7 @@ export default function AllZones({ allvehicles, isLoading, isError, refetch }) {
 
     return (
         <Box >
-            <ToastContainer/>
+            <ToastContainer />
             {
                 groupedByZone &&
                 Object.entries(groupedByZone)

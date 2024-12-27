@@ -6,7 +6,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-
 // Custom icons
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
@@ -17,8 +16,6 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
-const logo = require("../assets/logo.png");
 
 const newlogo = require("../assets/logo/medlogo.png")
 

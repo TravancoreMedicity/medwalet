@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import Testcomponent from './Parking/Testcomponent';
+import ZoneDetail from './Parking/ZoneDetail';
 
 const Home = () => {
   return (
     <Box >
-      <Testcomponent />
+      <ZoneDetail />
     </Box>
   );
 };

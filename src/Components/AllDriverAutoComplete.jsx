@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import Autocomplete from '@mui/joy/Autocomplete';
 import FormControl from '@mui/joy/FormControl';
 import { useQuery } from '@tanstack/react-query';
@@ -6,17 +6,11 @@ import { getdriverDropdownReport } from '../Views/CommonComponents/useQueryFunct
 
 export default function AllDriverAutoComplete({ driverselection, driver, setDriverEmpid }) {
 
-    let TodayData = new Date().toISOString().slice(0, 10);
-
-    const postData = useMemo(() => ({
-        currentDate: TodayData
-    }), [TodayData]);
-
     const { success: attendancesuccessReport, data: dirverAttendaceReport, refetch: fetchDriverReport } = useQuery({
         queryKey: ['dirverAttendaceReport'],
         queryFn: () => getdriverDropdownReport(),
         onError: (error) => {
-            console.error("Error fetching driver attendance:", error);
+            console.log("Error fetching driver attendance:", error);
         },
     });
 
@@ -38,7 +32,6 @@ export default function AllDriverAutoComplete({ driverselection, driver, setDriv
                 }}
                 onChange={(event, newValue) => {
                     if (newValue) {
-                        console.log(newValue, "value");
                         driverselection(newValue);
                         setDriverEmpid(newValue.emp_id)
                     }

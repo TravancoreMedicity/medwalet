@@ -31,7 +31,6 @@ function ParkingDetail() {
 
 
     const selectParkingType =useCallback((name) =>{
-        console.log(name);
         navigate('/Home/parkingdetail', { state: {type:name }});
     },[])   
 

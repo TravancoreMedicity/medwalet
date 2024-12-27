@@ -1,40 +1,49 @@
-import { Box, Button, Tooltip, Typography } from '@mui/joy';
 import { Paper } from '@mui/material'
-import React, { lazy, memo, Suspense, useCallback, useMemo, useState } from 'react'
-import { ToastContainer } from 'react-toastify'
-import MasterHeader from '../../Components/MasterHeader'
+import React, { lazy, memo, Suspense, useCallback, useMemo, useRef, useState } from 'react'
 import { getAllVehicles } from '../CommonComponents/useQueryFunctions'
 import { useQuery } from '@tanstack/react-query';
-import dayjs from 'dayjs';
 import MasterTable from '../CommonComponents/MasterTable';
 import { axioslogin } from '../../AxiosConfig/Axiox';
-import { warningNofity } from '../../Constant/Constant';
+import { errorNofity, warningNofity } from '../../Constant/Constant';
+import { format } from 'date-fns';
+import ReportComponents from '../CommonComponents/ReportComponents';
+import FilterFunctionSkeleton from '../../Components/FilterSkeleton';
 
 
 const FilterFunction = lazy(() => import("../CommonComponents/FilterFunction"))
-const ReportHeader = lazy(() => import("../../Components/ReportHeader"))
+
 
 function DriverRevenueReports() {
-
-
+  const apiRef = useRef();
   const [selectedValue, setSelectedValue] = useState('a');
-  const [start, setStart] = useState(dayjs().format('YYYY-MM-DD'));
-  const [end, setEnd] = useState(dayjs().format('YYYY-MM-DD'));
+  const [start, setStart] = useState(new Date())
+  const [end, setEnd] = useState(new Date());
   const [todayvehicle, setTodayVehicle] = useState([])
   const [vehiclebetweendate, setVehicleBetweenDate] = useState([])
   const [loadingbetweenDate, setLoadingBetweenDate] = useState(false)
-  let TodayData = new Date().toISOString().slice(0, 10);
+
 
   const { success, data: allvehicles, refetch, isLoading: allvehilceLoading } = useQuery({
     queryKey: ['allvehicles'],
     queryFn: () => getAllVehicles(),
     enabled: selectedValue == 'a'
   })
+
   const handleChange = useCallback(async (event) => {
     setSelectedValue(event.target.value);
     if (event.target.value === 'b') {
-      const vehicleData = await getVehiclesofToday();
-      setTodayVehicle(vehicleData)
+      setLoadingBetweenDate(true)
+      const postData = { currentDate: format(new Date(), 'yyyy-MM-dd') }
+      try {
+        const response = await axioslogin.post('/medvehilces/getTodayVehicles', postData);
+        const { success, data } = response.data;
+        if (success === 1) {
+          setLoadingBetweenDate(false)
+          setTodayVehicle(data);
+        }
+      } catch (error) {
+        errorNofity("Error fetching today's vehicles:", error);
+      }
       setVehicleBetweenDate([])
     }
     if (event.target.value === 'a') {
@@ -43,7 +52,9 @@ function DriverRevenueReports() {
     }
   });
 
-  const filterindData = selectedValue === "a" && allvehicles ? allvehicles : selectedValue === 'b' ? todayvehicle : vehiclebetweendate;
+  const filterindData = selectedValue === "a" && allvehicles
+    ? allvehicles : selectedValue === 'b' ?
+      todayvehicle : vehiclebetweendate;
 
   const FilteringOnlyPayment = filterindData?.filter(vehicle => vehicle.vallet_type === 1);
 
@@ -67,38 +78,15 @@ function DriverRevenueReports() {
     }));
   })
 
-
-  const postData = useMemo(() => ({
-    currentDate: TodayData
-  }), [TodayData]);
-
-  const BothDate = useMemo(() => ({
-    startDate: start,
-    EndDate: end,
-  }), [start, end]);
-
-  const getVehiclesofToday = useCallback(async () => {
-    setLoadingBetweenDate(true)
-    try {
-      const response = await axioslogin.post('/medvehilces/getTodayVehicles', postData);
-      const { success, data } = response.data;
-      console.log(data, "Today Vehicles");
-      if (success === 1) {
-        setLoadingBetweenDate(false)
-        return data;
-      }
-    } catch (error) {
-      console.error("Error fetching today's vehicles:", error);
-    }
-  });
-
-
   const getVehicleFromStartAndEnd = useCallback(async () => {
     setLoadingBetweenDate(true)
+    const BothDate = {
+      startDate: format(new Date(start), 'yyyy-MM-dd'),
+      EndDate: format(new Date(end), 'yyyy-MM-dd'),
+    }
     try {
       const response = await axioslogin.post('/medvehilces/getvehicleBetweenData', BothDate);
       const { success, data } = response.data;
-      console.log(data, "Vehicle data");
       if (success === 1 && data.length === 0) {
         warningNofity("No data found")
         setLoadingBetweenDate(false)
@@ -107,24 +95,9 @@ function DriverRevenueReports() {
       setVehicleBetweenDate(data)
       setLoadingBetweenDate(false)
     } catch (error) {
-      console.error("Error fetching today's vehicles:", error);
+      errorNofity("Error fetching today's vehicles:", error);
     }
-  });
-
-  const handleStartDateChange = (newValue) => {
-    const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
-    if (dayjs(formattedDate).isValid()) {
-      setStart(formattedDate);
-    }
-  };
-
-  const handleEndDateChange = (newValue) => {
-    const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
-    if (dayjs(formattedDate).isValid()) {
-      setEnd(formattedDate);
-    }
-  };
-
+  }, [start, end]);
 
 
 
@@ -138,58 +111,41 @@ function DriverRevenueReports() {
     []
   );
 
+  const download = useCallback(() => {
+    if (apiRef.current && apiRef.current.api) {
+      apiRef.current.api.exportDataAsCsv();
+    }
+  }, []);
+
   return (
-    <Box sx={{
-      height: window.innerHeight - 100,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      p: 1
-    }}>
-      <ToastContainer />
-      <Paper
-        elevation={3}
-        sx={{
-          flex: 1,
-          height: window.innerHeight - 80,
-          position: 'relative',
-          p: 1
-        }}>
-        <ReportHeader
-          name={'Employee Vise Revenue Report'}
-          path={'/Reports/mainpage'}
+    <ReportComponents
+      title="Employee Vise Revenue Report"
+      data={[]}
+      displayClose={true}
+      path={'/Reports/mainpage'}
+      onDownload={download}
+
+    >
+      <Suspense fallback={<FilterFunctionSkeleton />}>
+        <FilterFunction
+          start={start}
+          end={end}
+          selectedValue={selectedValue}
+          handleChange={handleChange}
+          handleStartDateChange={setStart}
+          getVehicleFromStartAndEnd={getVehicleFromStartAndEnd}
+          handleEndDateChange={setEnd}
         />
-        <Suspense
-          fallback="loading">
-          <FilterFunction
-            start={start}
-            end={end}
-            selectedValue={selectedValue}
-            handleChange={handleChange}
-            handleStartDateChange={handleStartDateChange}
-            getVehicleFromStartAndEnd={getVehicleFromStartAndEnd}
-            handleEndDateChange={handleEndDateChange}
-          />
-        </Suspense>
-        <Box
-          sx={{
-            width: '100%',
-            height: { md: '68%' },
-            display: 'flex'
-          }}>
-          <Box sx={{
-            width: '100%',
-            height: '100%'
-          }}>
-            <MasterTable
-              loading={selectedValue === "a" ? allvehilceLoading : loadingbetweenDate}
-              rowData={FormatteddriverTotalRevenue}
-              columnDefs={colDefs}
-            />
-          </Box>
-        </Box>
+      </Suspense>
+      <Paper square elevation={0} sx={{ p: 1, mt: 0.5, display: 'flex', flexDirection: "column", width: "100%" }} >
+        <MasterTable
+          loading={selectedValue === "a" ? allvehilceLoading : loadingbetweenDate}
+          rowData={FormatteddriverTotalRevenue}
+          columnDefs={colDefs}
+          apiRef={apiRef}
+        />
       </Paper>
-    </Box>
+    </ReportComponents>
   )
 }
 

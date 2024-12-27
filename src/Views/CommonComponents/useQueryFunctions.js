@@ -12,12 +12,8 @@ export const getDepartment = async () => {
 
 
 export const getDepartmentSection = async (id) => {
-    console.log(id, "id");
-
     return axioslogin.get(`/deptsecmaster/${id}`).then((res) => {
         const { success, data } = res.data;
-        console.log(data, "section");
-
         if (success === 1) {
             return data
         }
@@ -146,11 +142,11 @@ export const getAllAttendaceReport = async () =>{
 
 export const calculateHeight = (opening, selectedFile) => {
     if (selectedFile.length > 0) {
-        return { xs: 625, sm: 700, md: 700, lg: 720 };
+        return { xs: 625, sm: 720, md: 700, lg: 700 };
     } else if (opening) {
-        return { xs: 530, sm: 610, md: 600, lg: 620 };
+        return { xs: 530, sm: 640, md: 600, lg: 610 };
     } else {
-        return { xs: 430, sm: 510, md: 520, lg: 520 };
+        return { xs: 430, sm: 540, md: 510, lg: 520 };
     }
 };
 

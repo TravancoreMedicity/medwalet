@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-Static.js
+Static.jsx
 # production
 /build
 

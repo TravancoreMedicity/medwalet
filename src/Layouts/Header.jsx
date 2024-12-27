@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Button, Tooltip, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Input from '@mui/joy/Input';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SearchSharpIcon from '@mui/icons-material/SearchSharp';
 import { useNavigate } from 'react-router-dom';

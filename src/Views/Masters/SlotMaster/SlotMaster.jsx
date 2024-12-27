@@ -155,8 +155,6 @@ export default function SlotMaster() {
   //fetching the data for updation
   const getEdit = useCallback((params) => {
     const rowData = params.data;    
-    console.log(rowData);
-    
     setSlotCount(rowData.Slotcount);
     setSlotStatus(rowData.Status === "Active" ? true : false);
     setZoneSlNo(rowData.zone_sl);

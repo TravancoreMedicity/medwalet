@@ -14,9 +14,6 @@ function AttendaceCard() {
         empid: '',
         status: ''
     });
-
-
-
     let TodayData = new Date().toISOString().slice(0, 10);
     let CurrentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
 
@@ -33,12 +30,9 @@ function AttendaceCard() {
         queryKey: ['dirverAttendace'],
         queryFn: () => getallPresentDriver(postData),
         onError: (error) => {
-            console.error("Error fetching driver attendance:", error);
+            console.log("Error fetching driver attendance:", error);
         },
     });
-
-
-    console.log(dirverAttendace, "attendace");
 
     const handleCheckboxChange = useCallback((empid, value) => {
         if (checkedYes.empid === empid && checkedYes.status === value) {
@@ -63,7 +57,6 @@ function AttendaceCard() {
         }
 
         const matchedAttendance = dirverAttendace?.find((driver) => {
-            console.log("Driver Emp ID:", driver.emp_id);
             return driver.emp_id === updatedCheckedYes.empid;
         });
 
@@ -89,7 +82,7 @@ function AttendaceCard() {
                 fetchDriver();
             }
         } catch (err) {
-            console.error("Error during attendance submission:", err);
+            warningNofity("Error during attendance submission:", err);
         }
     }, [dirverAttendace, TodayData, CurrentTime]);
 

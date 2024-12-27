@@ -1,33 +1,24 @@
 import { Box, Typography } from '@mui/material'
-import React from 'react'
+import React, { memo } from 'react'
 import { Grid } from '@mui/joy';
 
-
-
-const Testcomponent = ({ zone, vehilce }) => {
-
-
-  // console.log(vehilce,"vehicles");
-  
-
-  // const groupedByZone = vehilce?.reduce((acc, vehicle) => {
-  //   const zone = vehicle.zone_name || "Unknown Zone";
-  //   if (!acc[zone]) {
-  //     acc[zone] = [];
-  //   }
-  //   acc[zone].push(vehicle);
-  //   return acc;
-  // }, {});
-
-  // console.log(groupedByZone);
-  // Object.entries(groupedByZone)
-  // .map(([zonename, vehicle], index) => {
-  
-    
+const ZoneDetail = ({ zone, vehilce }) => {
 
   return (
     <Box>
-      <Grid container py={1} gap={0.5} sx={{ width: '100%', minHeight: 200, display: 'flex', flexDirection: { lg: 'row', md: 'row', sm: 'row', xs: 'column' }, flexWrap: 'wrap', px: 1 }}>
+      <Grid
+        container
+        py={1}
+        gap={0.5}
+        sx={{
+          width: '100%',
+          minHeight: 200,
+          display: 'flex',
+          flexDirection:
+            { lg: 'row', md: 'row', sm: 'row', xs: 'column' },
+          flexWrap: 'wrap',
+          px: 1
+        }}>
         {
           zone?.map((type, index) => {
             const count = vehilce?.filter((item) => item.zone_name === type.zone_name)
@@ -65,7 +56,7 @@ const Testcomponent = ({ zone, vehilce }) => {
   )
 }
 
-export default Testcomponent;
+export default memo(ZoneDetail);
 
 
 

@@ -1,13 +1,9 @@
 import React, { lazy, useCallback, useMemo, useState } from 'react';
-import { Box, colors, IconButton, Paper, Typography } from '@mui/material'
-import Button from '@mui/material/Button';
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
-import Tooltip from '@mui/material/Tooltip';
+import { Box, Paper, Typography } from '@mui/material'
 import { ToastContainer } from 'react-toastify';
 import {
     getAllDriverUserRight,
     getallPresentDriver,
-    getAllUserRights
 } from '../../CommonComponents/useQueryFunctions';
 import { useQuery } from '@tanstack/react-query';
 import { errorNofity, succesNofity, warningNofity } from '../../../Constant/Constant';
@@ -15,6 +11,7 @@ import { axioslogin } from '../../../AxiosConfig/Axiox';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Chip from '@mui/joy/Chip';
+import { format } from 'date-fns';
 
 
 const MasterHeader = lazy(() => import('../../../Components/MasterHeader'));
@@ -46,13 +43,9 @@ export default function DriverMaster() {
         queryKey: ['dirverAttendace'],
         queryFn: () => getallPresentDriver(postData),
         onError: (error) => {
-            console.error("Error fetching driver attendance:", error);
+            console.log("Error fetching driver attendance:", error);
         },
     });
-
-
-    console.log(dirverAttendace, "attendace");
-    console.log(checkedYes, "checkedYes");
 
     const handleCheckboxChange = useCallback((empid, value) => {
         if (checkedYes.empid === empid && checkedYes.status === value) {
@@ -77,7 +70,6 @@ export default function DriverMaster() {
         }
 
         const matchedAttendance = dirverAttendace?.find((driver) => {
-            console.log("Driver Emp ID:", driver.emp_id);
             return driver.emp_id === updatedCheckedYes.empid;
         });
 
@@ -103,7 +95,7 @@ export default function DriverMaster() {
                 fetchDriver();
             }
         } catch (err) {
-            console.error("Error during attendance submission:", err);
+            errorNofity("Error during attendance submission:", err);
         }
     }, [dirverAttendace, TodayData, CurrentTime]);
 
@@ -122,9 +114,6 @@ export default function DriverMaster() {
                 })
             : [];
     }, [allusersright, checkedYes]);
-
-
-
 
 
     const colDefs = useMemo(
@@ -176,7 +165,7 @@ export default function DriverMaster() {
                         <TaskAltIcon
                             sx={{ color: inColor }}
                             onClick={() => {
-                                handleCheckboxChange( params.data.empid, 'yes')
+                                handleCheckboxChange(params.data.empid, 'yes')
                             }}
                         />
                     )
@@ -194,7 +183,7 @@ export default function DriverMaster() {
                         <HighlightOffIcon
                             sx={{ color: outColor }}
                             onClick={() => {
-                                handleCheckboxChange( params.data.empid, 'no')
+                                handleCheckboxChange(params.data.empid, 'no')
                             }}
                         />
                     )
@@ -204,13 +193,39 @@ export default function DriverMaster() {
         [checkedYes, dirverAttendace]
     );
 
+
     return (
-        <Box sx={{ width: '100%', height: '94vh', display: 'flex', alignItems: 'center', justifyContent: 'center', pb: 2, position: 'relative' }}>
+        <Box sx={{
+            width: '100%',
+            height: '93vh',
+            display:'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+        }}>
             <ToastContainer />
-            <Paper elevation={3} sx={{ width: '98%', height: "90%", px: 2, py: 2, position: 'relative' }}>
+            <Paper
+                elevation={3}
+                sx={{
+                    width: '98%',
+                    height: "90%",
+                    px: 2,
+                    py: 2,
+                    position: 'relative'
+                }}>
                 <MasterHeader name={"Driver Attendance"} />
-                <Box sx={{ width: '100%', height: '5%', display: 'flex', display: 'flex', alignItems: 'center', px: 2, justifyContent: 'space-between', boxShadow: 3, bgcolor: 'white', my: 1, borderRadius: 1 }}>
-                    <Typography sx={{ fontSize: 16 }}>Current Date: {TodayData}</Typography>
+                <Box sx={{
+                    width: '100%',
+                    // height: '5%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    px: 2,
+                    justifyContent: 'space-between',
+                    bgcolor: 'white',
+                    my: 1,
+                    borderRadius: 1
+                }}>
+                    <Typography sx={{ fontSize: 16 }}>Current Date: {format(new Date(), 'dd-MM-yyyy')}</Typography>
                     <Typography sx={{ fontSize: 16 }}>Current Time: {DiaplayTime}</Typography>
                 </Box>
                 <Box sx={{ width: '100%', height: '70%', display: 'flex' }}>

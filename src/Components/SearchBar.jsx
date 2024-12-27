@@ -1,4 +1,4 @@
-import React, { lazy, memo, Suspense, useCallback, useMemo, useState } from 'react';
+import React, { lazy, memo, Suspense, useCallback, useState } from 'react';
 import Input from '@mui/joy/Input';
 import { Box, Button, Typography } from '@mui/material';
 import SearchSharpIcon from '@mui/icons-material/SearchSharp';
@@ -10,8 +10,8 @@ import { axioslogin } from '../AxiosConfig/Axiox';
 import { errorNofity, warningNofity } from '../Constant/Constant';
 import { ToastContainer } from 'react-toastify';
 
-
 const SingleVehicleModal = lazy(() => import("../Pages/Parking/SingleVehicleModal"))
+const CircularProgressThickness = lazy(() => import("../Components/CircularProgress"))
 
 
 function SearchBar() {
@@ -20,6 +20,9 @@ function SearchBar() {
     const [openModal, setOpenModal] = useState(false);
     const [filterdata, setFilteredData] = useState([]);
     const [searched, setSearched] = useState(false);
+    const [opening, setOpening] = useState('');
+    const [selectedFile, setSelectedFile] = useState([]);
+    const [preview, setPreview] = useState([]);
 
     const handleVehicleSelect = useCallback((vehicle) => {
         setSelectedVehicle(vehicle);
@@ -31,29 +34,24 @@ function SearchBar() {
         setSelectedVehicle(null);
     });
 
-    const searchData = useMemo(() => {
-        return {
-            vehicle_number: searchinput
-        };
-    }, [searchinput]);
-
-    //The given code fetches data based on the searchinput 
     const hanldesearch = useCallback(async () => {
         try {
             if (!searchinput) return warningNofity("Please enter a vehicle number");
             setSearched(true);
-            const resposne = await axioslogin.post('/medvehilces/searchVehicle', searchData);
+            const resposne = await axioslogin.post('/medvehilces/searchVehicle', {
+                vehicle_number: searchinput
+            });
             const { data, success } = resposne.data;
             if (success === 2) return errorNofity("Error in fetching data");
             if (success === 1) {
                 const filteredData = data ? data : [];
                 setFilteredData(filteredData);
             }
-            // setSearchInput('');
         } catch (error) {
             console.log(error);
+            errorNofity("error in searching data")
         }
-    }, [searchData]);
+    }, [searchinput]);
 
     return (
         <>
@@ -65,7 +63,11 @@ function SearchBar() {
                     onChange={(e) => setSearchInput(e.target.value)}
                     value={searchinput}
                 />
-                <Button variant="contained" onClick={hanldesearch}>
+                <Button
+                    variant="contained"
+                    onClick={hanldesearch}
+                    onKeyDown={e => e.key === "Enter" ? hanldesearch : ""}
+                >
                     <SearchSharpIcon />
                 </Button>
             </Box>
@@ -100,7 +102,7 @@ function SearchBar() {
 
                             searched && (
                                 <Box sx={{ width: '100%', height: 360, display: 'flex', alignItems: 'start', justifyContent: "center" }}>
-                                    <Box sx={{ width: { xs: 140, sm: 200, md: 200, lg: 220 }, height: { xs: 140, sm: 200, md: 200, lg: 220 }, bgcolor: 'red', }}>
+                                    <Box sx={{ width: { xs: 140, sm: 200, md: 200, lg: 220 }, height: { xs: 140, sm: 200, md: 200, lg: 220 } }}>
                                         <img src={resultno} alt="No results" style={{ width: '100%', height: '100%' }} />
                                     </Box>
                                 </Box>
@@ -109,11 +111,18 @@ function SearchBar() {
                     }
                 </Grid>
 
-                <Suspense>
+                <Suspense fallback={<CircularProgressThickness />}>
                     <SingleVehicleModal
                         openModal={openModal}
                         selectedVehicle={selectedVehicle}
                         handleCloseModal={handleCloseModal}
+                        opening={opening}
+                        refetch={hanldesearch}
+                        setOpening={setOpening}
+                        setSelectedFile={setSelectedFile}
+                        selectedFile={selectedFile}
+                        setPreview={setPreview}
+                        preview={preview}
                     />
                 </Suspense>
             </Box>

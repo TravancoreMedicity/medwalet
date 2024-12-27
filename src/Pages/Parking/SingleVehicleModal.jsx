@@ -1,8 +1,7 @@
-import React, { lazy, useCallback, useMemo, useState } from 'react';
+import React, { lazy, useCallback, useState } from 'react';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
-import Sheet from '@mui/joy/Sheet';
 import Divider from '@mui/joy/Divider';
 import { Box, Button, ModalDialog } from '@mui/joy';
 import { differenceInSeconds, format } from 'date-fns';
@@ -11,7 +10,6 @@ import { axioslogin } from '../../AxiosConfig/Axiox';
 import InputFileUpload from './ParkingFileupload';
 import { calculateHeight, HandleImageCompression } from '../../Views/CommonComponents/useQueryFunctions';
 import LabourSelectBox from '../../Components/AutoComplete';
-import { ToastContainer } from 'react-toastify';
 import { useMediaQuery } from '@mui/material';
 import TextComponent from './Component/TextComponent';
 
@@ -55,7 +53,7 @@ export default function SingleVehicleModal({
         setPreview([]);
         setDriver("")
         setDriverEmpid("")
-    }, [])
+    },[setSelectedFile,setOpening,setPreview])
 
 
     const handlesubmit = useCallback(async (slno) => {
@@ -66,7 +64,7 @@ export default function SingleVehicleModal({
                 registration_slno: slno,
                 driverempid: driverempid
             });
-            const { success, message } = response.data;
+            const { success } = response.data;
             if (success === 2) return errorNofity("error in submitting data");
             succesNofity("Vehicle removed Successfully")
             setLoading(false)
@@ -74,9 +72,10 @@ export default function SingleVehicleModal({
             handleclose()
             refetch()
         } catch (err) {
+            console.log(err);
             errorNofity("Error occured in Submitting Data")
         }
-    }, [driverempid]);
+    }, [driverempid,handleCloseModal,handleclose,refetch,drivererror]);
 
 
     const hanldeImageUpload = useCallback(async (path) => {
@@ -90,6 +89,7 @@ export default function SingleVehicleModal({
                 compressedVehicleImage?.map((file) => {
                     const newFileName = `vehicle_${file.name}`
                     formData.append('files', new File([file], newFileName, { type: file.type }));
+                    return null
                 });
             }
             const response = await axioslogin.post('/medvehilces/UploadImageSeparate', formData, {
@@ -108,33 +108,31 @@ export default function SingleVehicleModal({
             errorNofity("Server Error occured")
         }
 
-
-    }, [selectedFile, HandleImageCompression])
+    }, [selectedFile,handleCloseModal,handleclose,refetch])
 
 
     //parking time
     const parkingTimeData = useCallback((create_date) => {
         const datefm = format(new Date(create_date), 'dd-MM-yyyy HH:mm:ss')
         return datefm
-    }, [selectedVehicle])
+    }, [])
 
     const calculateTotalTime = useCallback((create_date) => {
         const createdDate = new Date(create_date);
         const currentDate = new Date();
         // Calculate the difference
         const diffInSeconds = Math.abs(differenceInSeconds(createdDate, currentDate));
-        const days = Math.floor(diffInSeconds / (24 * 60 * 60));
         const hours = Math.floor((diffInSeconds % (24 * 60 * 60)) / (60 * 60));
         const minutes = Math.floor((diffInSeconds % (60 * 60)) / 60);
         const seconds = diffInSeconds % 60;
         return `${hours} hr : ${minutes} min : ${seconds} sec`;
-    })
+    },[])
 
 
     return (
         <>
             <Box>
-                {/* <ToastContainer /> */}
+            
                 <Modal
                     aria-labelledby="modal-title"
                     aria-describedby="modal-desc"
@@ -172,7 +170,7 @@ export default function SingleVehicleModal({
                                     </Typography>
                                     <Box
                                         sx={{
-                                            width: '100%', height: { xs: 200, sm: 250, md: 210 },
+                                            width: '100%', height: { xs: 200, sm: 230, md: 210 },
                                             position: 'relative',
                                             p: 0.5
                                         }}>

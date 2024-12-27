@@ -2,15 +2,10 @@ import * as React from 'react';
 import { Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-
-
 export default function AddButton({setOpen}) {
-
-
     const handleBackClick = () => {
         setOpen(true)
     };
-
     return (
         <Box
             sx={{

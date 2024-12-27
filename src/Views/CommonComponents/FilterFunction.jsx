@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box, Button, Tooltip, Typography } from '@mui/joy'
-import { Input, Paper } from '@mui/material'
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import Radio from '@mui/joy/Radio';
 import dayjs from 'dayjs';
@@ -8,7 +7,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import SaveIcon from '@mui/icons-material/Save';
 
 function FilterFunction({
     selectedValue,
@@ -67,7 +65,7 @@ function FilterFunction({
                     <DatePicker
                         label="Start Date"
                         value={dayjs(start)}
-                        onChange={handleStartDateChange}
+                        onChange={(newvalue) => handleStartDateChange(newvalue)}
                         inputFormat="dd-MM-yyyy"
                         maxDate={dayjs(end)}
                         sx={{
@@ -82,7 +80,7 @@ function FilterFunction({
                         label="End Date"
                         value={dayjs(end)}
                         inputFormat="dd-MM-yyyy"
-                        onChange={handleEndDateChange}
+                        onChange={(newvalue) => handleEndDateChange(newvalue)}
                         minDate={dayjs(start)}
                         maxDate={dayjs()}
                         sx={{

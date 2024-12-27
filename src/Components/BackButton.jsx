@@ -2,11 +2,7 @@ import * as React from 'react';
 import { Box } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-
-
 export default function BackButton() {
-
-
     const handleBackClick = () => {
         if (window.history.length > 1) {
             window.history.back();

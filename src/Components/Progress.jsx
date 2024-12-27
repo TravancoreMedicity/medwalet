@@ -2,11 +2,9 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import logoSrc from '../assets/logo/newicon.png'
-
-
 
 const CustomLinearProgress = styled(LinearProgress)(({ barColor, trackColor }) => ({
   height: 10,

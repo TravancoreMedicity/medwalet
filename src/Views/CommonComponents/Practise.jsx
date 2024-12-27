@@ -239,7 +239,7 @@ export default function ValletForm({ refetch, allvehicles }) {
             );
             return compressedFiles;
         } catch (error) {
-            console.log("error in compressing image");
+            errorNofity("error in compressing image");
         }
     }, []);
 
@@ -286,7 +286,7 @@ export default function ValletForm({ refetch, allvehicles }) {
             refetch();
 
         } catch (err) {
-            console.log(err);
+            console.log(err)
             warningNofity('An error occurred during Inserting data.');
         }
     }, [insertdata, selectedFile, paymentFile, driver, slotnumber])

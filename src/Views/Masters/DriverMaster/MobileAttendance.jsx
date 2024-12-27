@@ -1,9 +1,6 @@
 import { Box, Typography } from '@mui/joy'
 import React, { lazy, Suspense } from 'react'
 import Person3Icon from '@mui/icons-material/Person3';
-
-
-
 const AttendaceCard = lazy(() => import('./AttendaceCard'))
 
 function MobileAttendance() {

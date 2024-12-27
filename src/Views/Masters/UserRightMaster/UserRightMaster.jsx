@@ -7,7 +7,13 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
 import { useQuery } from '@tanstack/react-query'
-import { getDepartment, getDepartmentSection, getDepartmentEmployee, getAllUserMaster, getAllUserRights } from '../../CommonComponents/useQueryFunctions';
+import {
+    getDepartment,
+    getDepartmentSection,
+    getDepartmentEmployee,
+    getAllUserMaster,
+    getAllUserRights
+} from '../../CommonComponents/useQueryFunctions';
 import { employeeID, errorNofity, succesNofity, warningNofity } from '../../../Constant/Constant';
 import { ToastContainer } from 'react-toastify';
 import { axioslogin } from '../../../AxiosConfig/Axiox';
@@ -179,9 +185,8 @@ export default function UserRightMaster() {
 
 
     const getEdit = useCallback((params) => {
-        
+
         const rowData = params.data;
-        console.log(rowData);
         setDepartmentId(rowData.depid);
         setSectionId(rowData.secid);
         setEmployeeId(rowData.empid)
@@ -192,12 +197,12 @@ export default function UserRightMaster() {
     }, [department]);
 
 
-    
+
     return (
         <>
             <ToastContainer />
             <Box sx={{ width: '100%', height: '93vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Paper elevation={3} sx={{ width: '98%',  height: "90%",position:'relative' }}>
+                <Paper elevation={3} sx={{ width: '98%', height: "90%", position: 'relative' }}>
                     <MasterHeader name={"Driver Master"} />
                     <Box sx={{ width: '100%', height: '90%', display: 'flex' }}>
                         <Box sx={{ width: '30%', height: '100%', px: 2, py: 2 }}>

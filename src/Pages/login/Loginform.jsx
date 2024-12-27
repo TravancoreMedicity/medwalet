@@ -1,11 +1,11 @@
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
+import React, { memo, useCallback, useMemo, useState } from 'react'
 import { Typography } from '@mui/joy'
 import { Paper } from '@mui/material'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
-import { succesNofity, errorNofity, sanitizeToNumbers } from '../../Constant/Constant';
+import { succesNofity, errorNofity, sanitizeToNumbers, warningNofity } from '../../Constant/Constant';
 import { ToastContainer } from 'react-toastify';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 
@@ -15,7 +15,7 @@ import { axioslogin } from '../../AxiosConfig/Axiox';
 function Loginform() {
 
   const navigate = useNavigate()
-
+    
   const [userInput, setUserInput] = useState({
     empid: '',
     password: ''
@@ -73,7 +73,7 @@ function Loginform() {
     }
   })
 
-  const handleloginform = useCallback(async () => {
+  const handleloginform = useCallback(async () => { 
     try {
 
       if (userInput.empid === null || userInput.empid === undefined || userInput.empid === "") {
@@ -90,7 +90,6 @@ function Loginform() {
         }));
         return;
       }
-
       const result = await axioslogin.post("/employee/login", useLoginDetail)
       const { token, message, emp_id, success } = await result.data;
 
@@ -175,6 +174,11 @@ function Loginform() {
       }}
         variant="contained"
         onClick={handleloginform}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleloginform()
+          }
+        }}
       >LogIn Here</Button>
       <Typography
         sx={{
