@@ -58,7 +58,7 @@ function AttendanceReports() {
       setDriverEmpid("")
     }
 
-  });
+  },[]);
 
   const driverselection = useCallback((driver) => {
     if (!driver) {
@@ -67,12 +67,14 @@ function AttendanceReports() {
     setDriver(driver);
   }, []);
 
-  const { success: AttendaceReportsucess, data: AttendaceReport, isLoading: Attendaceloading } = useQuery({
+  const {  data: AttendaceReport, isLoading: Attendaceloading } = useQuery({
     queryKey: ['getAllAttendaceReport'],
     queryFn: () => getAllAttendaceReport(),
   });
 
 
+
+  
 
   const handleEmployeeSearch = useCallback(async () => {
     setSelectedValue("")

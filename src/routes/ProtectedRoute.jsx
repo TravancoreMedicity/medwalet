@@ -1,14 +1,12 @@
 // @ts-nocheck
-import React, { useCallback, useEffect, useState } from 'react'
-import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import React, { useCallback } from 'react'
+import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { errorNofity, warningNofity } from '../Constant/Constant';
 import { axioslogin } from '../AxiosConfig/Axiox';
 import { useQuery } from '@tanstack/react-query';
 
 const ProtectedRoute = () => {
     const navigate = useNavigate()
-    const location = useLocation()
-    const [isnotexpired, setIsNotExpired] = useState(false)
     const userDetl = sessionStorage.getItem('userDetl');
     const auth_token = userDetl ? true : false;
 
@@ -24,7 +22,7 @@ const ProtectedRoute = () => {
      * **/
 
 
-    const { success, data:IsTokenNotExpired } = useQuery({
+    const {  data:IsTokenNotExpired } = useQuery({
         queryKey: ['tokenvalidate'],
         queryFn: () => handleTokenValidateCheck()
     })
@@ -32,7 +30,7 @@ const ProtectedRoute = () => {
     const handleTokenValidateCheck = useCallback(async () => {
         try {
             const response = await axioslogin.get('/validateToken');
-            const { status, message } = response.data;  
+            const { status } = response.data;  
             if (status === 101) {
                 warningNofity("Token Expired Please login")
                 sessionStorage.removeItem('userDetl');
@@ -44,7 +42,7 @@ const ProtectedRoute = () => {
         } catch (error) {
             errorNofity("Token Validation Error")
         }
-    })
+    },[navigate])
 
     return (auth_token !== null && auth_token !== undefined && auth_token === true && IsTokenNotExpired)
         ? <Outlet />

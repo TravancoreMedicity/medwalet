@@ -6,15 +6,15 @@ function TextComponent({label,value,color}) {
     return (
 
         <Box sx={{ display: 'flex' }}>
-            <Box sx={{ width: {xs:'43%',sm:'30%',md:'30%',lg:'35%'} }}>
+            <Box sx={{ width: {xs:'43%',sm:'30%',md:'30%',lg:'45%'}}}>
                 <Typography
-                    sx={{ fontSize: { xs: color === 'white' ? 11 :12, sm: 16, md: 16, lg: 18 },color:color }}>
+                    sx={{ fontSize: { xs: color === 'white' ? 11 :12, sm: 16, md: 15, lg: 16 },color:color }}>
                     <strong>{label}</strong>
                 </Typography>
             </Box>
-            <Box sx={{ width:{xs:"60%", sm:'70%',md:'70%',lg:'65%'} }}>
+            <Box sx={{ width:{xs:"60%", sm:'70%',md:'70%',lg:'50%'} }}>
                 <Typography
-                    sx={{ fontSize: { xs: 12, sm: 15, md: 16, lg: 18 },color:color }}
+                    sx={{ fontSize: { xs: 12, sm: 15, md: 16, lg: 16 },color:color }}
                 > :{value}
                 </Typography>
             </Box>

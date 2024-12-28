@@ -62,7 +62,6 @@ export default function SlotMaster() {
     setSlotCount(0)
     setSlotStatus(false)
     setZoneSlNo(null)
-
   })
 
   const { success: slotmastersuccess, data: allsloteMaster, refetch } = useQuery({
@@ -131,18 +130,17 @@ export default function SlotMaster() {
         console.log(err);
       }
     }
-  });
+  },[insertData,updateData,slotcount,zoneslno]);
 
   //defining the column for the master table
   const [colDefs] = useState([
-    { field: 'slNo', flex: 1 },
-    { field: 'Slotcount', flex: 1 },
-    { field: 'zonemaster', flex: 1 },
-    { field: 'Status', flex: 1 },
+    { field: 'slNo' },
+    { field: 'Slotcount' },
+    { field: 'zonemaster' },
+    { field: 'Status' },
     {
       headerName: 'Edit',
       field: 'edit',
-      flex: 1,
       cellRenderer: params => (
         <IconButton sx={{ paddingY: 0.5 }} onClick={() => getEdit(params)}>
           <EditIcon color='primary' />

@@ -8,7 +8,7 @@ import { PUBLIC_NAS_FOLDER } from '../Constant/Static';
 import resultno from '../assets/resultno.jpg';
 import { axioslogin } from '../AxiosConfig/Axiox';
 import { errorNofity, warningNofity } from '../Constant/Constant';
-import { ToastContainer } from 'react-toastify';
+
 
 const SingleVehicleModal = lazy(() => import("../Pages/Parking/SingleVehicleModal"))
 const CircularProgressThickness = lazy(() => import("../Components/CircularProgress"))
@@ -55,7 +55,6 @@ function SearchBar() {
 
     return (
         <>
-            <ToastContainer />
             <Box gap={1} sx={{ width: '100%', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Input
                     sx={{ width: '78%', fontSize: 14 }}

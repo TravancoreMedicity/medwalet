@@ -28,6 +28,7 @@ export default function BackButton() {
                     transform: 'scale(1.1)',
                     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
                 },
+                cursor:"pointer"
             }}
         >
             <Box

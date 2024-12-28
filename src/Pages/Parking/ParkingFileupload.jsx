@@ -111,7 +111,6 @@ export default function InputFileUpload({
 
   return (
     <div>
-      <ToastContainer/>
       <Button
         sx={{ fontSize: { xs: 10, sm: 14, lg: 15 }, mb: 1 }}
         component="label"

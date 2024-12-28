@@ -2,7 +2,7 @@ import { Paper } from '@mui/material'
 import React, { lazy, memo, Suspense, useCallback, useMemo, useRef, useState } from 'react'
 import dayjs from 'dayjs';
 import MasterTable from '../CommonComponents/MasterTable'
-import { getAllVehicleReport, getAllVehicles } from '../CommonComponents/useQueryFunctions'
+import { getAllVehicleReport } from '../CommonComponents/useQueryFunctions'
 import { useQuery } from '@tanstack/react-query';
 import { axioslogin } from '../../AxiosConfig/Axiox'
 import { errorNofity, warningNofity } from '../../Constant/Constant';
@@ -45,9 +45,7 @@ function ReportVehicleRegistration() {
     }, []);
 
     const {
-        success: allvehiclessuccess,
         data: allvehicleReport,
-        refetch: allvehiclesrefetch,
         isLoading: vehicleReportLoading
     } = useQuery({
         queryKey: ['getAllVehicleReport'],
@@ -107,16 +105,16 @@ function ReportVehicleRegistration() {
             Amount: items?.vallet_type === 1 ? '100' : "0",
             CreatedDate: dayjs(items?.create_date).format('DD-MM-YYYY')
         }))
-    }, [allvehicleReport, todayvehicle, vehiclebetweendate])
+    }, [])
 
     // const AllInformation = mapVehicleData(allvehicleReport);
     // const TodayVehicleInformation = mapVehicleData(todayvehicle);
     // const VehicleBetweenDate = mapVehicleData(vehiclebetweendate);
 
 
-    const AllInformation = useMemo(() => { return mapVehicleData(allvehicleReport) }, [allvehicleReport])
-    const TodayVehicleInformation = useMemo(() => { return mapVehicleData(todayvehicle) }, [todayvehicle])
-    const VehicleBetweenDate = useMemo(() => { return mapVehicleData(vehiclebetweendate) }, [vehiclebetweendate])
+    const AllInformation = useMemo(() => { return mapVehicleData(allvehicleReport) }, [allvehicleReport,mapVehicleData])
+    const TodayVehicleInformation = useMemo(() => { return mapVehicleData(todayvehicle) }, [todayvehicle,mapVehicleData])
+    const VehicleBetweenDate = useMemo(() => { return mapVehicleData(vehiclebetweendate) }, [vehiclebetweendate,mapVehicleData])
 
 
 

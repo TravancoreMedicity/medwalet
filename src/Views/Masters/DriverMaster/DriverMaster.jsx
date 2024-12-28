@@ -62,18 +62,13 @@ export default function DriverMaster() {
 
 
 
-
     const handleattendance = useCallback(async (updatedCheckedYes) => {
-
         if (!updatedCheckedYes || !updatedCheckedYes.empid) {
             return warningNofity("Please select Values");
         }
-
         const matchedAttendance = dirverAttendace?.find((driver) => {
             return driver.emp_id === updatedCheckedYes.empid;
         });
-
-
         const formattedData = {
             empid: updatedCheckedYes.empid,
             in: updatedCheckedYes.status === "yes" ? 1 : 0,
@@ -83,7 +78,6 @@ export default function DriverMaster() {
             currentDate: TodayData,
             slno: matchedAttendance ? matchedAttendance.slno : null,
         };
-
         try {
             const result = await axioslogin.post("/medvallet/createnewCurrentDriver", formattedData);
             const { success, message } = result.data;
@@ -163,9 +157,11 @@ export default function DriverMaster() {
                     const inColor = driver && driver.instatus === 1 && driver.outstatus !== 1 ? "green" : "";
                     return (
                         <TaskAltIcon
-                            sx={{ color: inColor }}
+                            sx={{ color: inColor,cursor:'pointer' }}
                             onClick={() => {
+                               if(inColor === ""){
                                 handleCheckboxChange(params.data.empid, 'yes')
+                               }
                             }}
                         />
                     )
@@ -181,9 +177,11 @@ export default function DriverMaster() {
                     return (
 
                         <HighlightOffIcon
-                            sx={{ color: outColor }}
+                            sx={{ color: outColor,cursor:'pointer' }}
                             onClick={() => {
+                               if(outColor === ""){
                                 handleCheckboxChange(params.data.empid, 'no')
+                               }
                             }}
                         />
                     )

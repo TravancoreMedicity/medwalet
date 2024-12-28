@@ -3,10 +3,11 @@ import Button from '@mui/joy/Button';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
-import Sheet from '@mui/joy/Sheet';
+// import Sheet from '@mui/joy/Sheet';
 import { Box, useMediaQuery } from '@mui/material';
 import ControlledOpenSpeedDial from '../../Components/SpeedDial';
 import CircularProgressOnTop from '../../Components/CircularProgress';
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -19,7 +20,7 @@ export default function FormModal({ refetch, allvehicles }) {
 
     return (
         <>
-
+    <ToastContainer/>
             {
                 !isSmallScreen ? (
                     <Box sx={{
@@ -53,7 +54,7 @@ export default function FormModal({ refetch, allvehicles }) {
                     zIndex: 9999
                 }}
             >
-                <Sheet
+                {/* <Sheet
                     variant="outlined"
                     sx={{
                         width: { xs: '95%', sm: 400, md: 500, lg: 600 },
@@ -67,11 +68,30 @@ export default function FormModal({ refetch, allvehicles }) {
                         },
                         scrollbarWidth: 'none',
                     }}
+                > */}
+                 <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: { xs: '95%', sm: 550, md: 550, lg: 600 },
+                        bgcolor: 'white',
+                        boxShadow: 24,
+                        p: 3,
+                        borderRadius: 2,
+                        overflowY: "scroll",
+                        '&::-webkit-scrollbar': {
+                            display: 'none',
+                        },
+                        height: {xs:650,sm:800},
+                        scrollbarWidth: 'none',
+                    }}
                 >
                     <Box
                         sx={{
                             position: 'sticky',
-                            top: -16,
+                            top: -25,
                             zIndex: 999,
                             width: '100%',
                             py: { xs: 1, sm: 2 },
@@ -109,7 +129,8 @@ export default function FormModal({ refetch, allvehicles }) {
                             refetch={refetch}
                         />
                     </Suspense>
-                </Sheet>
+                {/* </Sheet> */}
+                </Box>
             </Modal>
 
 

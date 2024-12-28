@@ -102,6 +102,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
         if (driver) {
             setDriverError("");
         } else {
+            warningNofity("Please Select the driver")
             setDriverError("Please Select the driver");
         }
         setDriver(driver);
@@ -175,6 +176,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                 ...prevErrors,
                 nameError: "Please enter Owner Name"
             }));
+            warningNofity("Please enter Owner Name")
             hasError = true;
         }
         if (!formData.mobileNo) {
@@ -182,6 +184,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                 ...prevErrors,
                 mobileNoError: "Please enter mobile number"
             }));
+            warningNofity("Please enter mobile number")
             hasError = true;
         }
         if (!formData.vehicleNo) {
@@ -189,13 +192,11 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                 ...prevErrors,
                 vehicleNoError: "Please enter Vehicle number"
             }));
+            warningNofity( "Please enter Vehicle number")
             hasError = true;
         }
         if (slotnumber === 0 && !slotnumber) {
-            setFormErrors((prevErrors) => ({
-                ...prevErrors,
-                slotError: "Select the token number"
-            }));
+            warningNofity("Select the Slot number")
             hasError = true;
         }else{
             setFormErrors((prevErrors) => ({
@@ -222,6 +223,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                 ...prevErrors,
                 inputError: "Please enter the transaction id"
             }));
+            warningNofity( "Please enter the transaction id");
             hasError = true;
         } 
         return hasError;
@@ -249,7 +251,6 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                     const newFileName = selectedFile.length > 0
                         ? `vehicle_${file.name}`
                         : `default_vehicle_${file.name}`; // New file name for default image
-                    console.log(newFileName);
                     formData.append('files', new File([file], newFileName, { type: file.type }));
                 });
             }
@@ -457,7 +458,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                                                 setFormData({
                                                     ...formData,
                                                     selectupivallet: val !== formData.selectupivallet ? val : 0,
-                                                    paymentid: null,
+                                                    paymentid: "",
                                                 });
                                                 setPayPreview([]);
                                                 setPaymentFile([])
@@ -500,6 +501,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                                         <Input
                                             sx={{ fontSize: { xs: 11, sm: 16, md: 15, lg: 16 }, mb: 2 }}
                                             placeholder="₹100"
+                                            value={"₹100"}
                                             disabled
                                         />
                                     </>

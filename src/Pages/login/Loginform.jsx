@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
-import { succesNofity, errorNofity, sanitizeToNumbers, warningNofity } from '../../Constant/Constant';
+import { succesNofity, errorNofity, sanitizeToNumbers } from '../../Constant/Constant';
 import { ToastContainer } from 'react-toastify';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 
@@ -37,7 +37,7 @@ function Loginform() {
   }
 
   const handleError = (name, value) => {
-    if (name == "empid") {
+    if (name === "empid") {
       if (value === "") {
         setErrors((prev) => ({
           ...prev,
@@ -50,7 +50,7 @@ function Loginform() {
         }))
       }
     }
-    if (name == "password") {
+    if (name === "password") {
       if (value === "") {
         setErrors((prev) => ({
           ...prev,
@@ -71,7 +71,7 @@ function Loginform() {
       emp_username: userInput.empid,
       emp_password: userInput.password
     }
-  })
+  },[userInput])
 
   const handleloginform = useCallback(async () => { 
     try {
@@ -108,7 +108,7 @@ function Loginform() {
       console.log('Error during login:', err);
       errorNofity('Internal server Error')
     }
-  }, [useLoginDetail]);
+  }, [useLoginDetail,userInput.empid,userInput.password,navigate]);
 
 
 
@@ -128,8 +128,6 @@ function Loginform() {
       <ToastContainer />
       <Typography sx={{
         display: { xs: 'none', sm: 'block' },
-        fontFamily: "cursive",
-        fontWeight: 400,
         color: 'black',
         fontFamily: { xs: 'fantasy', sm: "cursive" },
         fontSize: { xs: 12, sm: 16 },
@@ -184,7 +182,7 @@ function Loginform() {
         sx={{
           display: { xs: 'block', sm: 'none' },
           marginTop: 1,
-          fontWeight: 400,
+          // fontWeight: 400,
           color: 'black',
           fontFamily: { sm: "cursive" },
           fontSize: { xs: 12, sm: 16 },
@@ -195,6 +193,7 @@ function Loginform() {
         variant="contained"
         sx={{
           marginTop: { sm: 1 },
+          // fontWeight: 400,
           fontFamily: { sm: "cursive" },
           cursor: 'pointer',
           fontSize: { xs: 11, sm: 14, lg: 16 },

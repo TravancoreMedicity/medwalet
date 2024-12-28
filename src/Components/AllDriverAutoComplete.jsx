@@ -6,7 +6,7 @@ import { getdriverDropdownReport } from '../Views/CommonComponents/useQueryFunct
 
 export default function AllDriverAutoComplete({ driverselection, driver, setDriverEmpid }) {
 
-    const { success: attendancesuccessReport, data: dirverAttendaceReport, refetch: fetchDriverReport } = useQuery({
+    const { data: dirverAttendaceReport, refetch: fetchDriverReport } = useQuery({
         queryKey: ['dirverAttendaceReport'],
         queryFn: () => getdriverDropdownReport(),
         onError: (error) => {

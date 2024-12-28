@@ -3,15 +3,16 @@ import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
 import Divider from '@mui/joy/Divider';
-import { Box, Button, ModalDialog } from '@mui/joy';
+import { Box, Button } from '@mui/joy';
 import { differenceInSeconds, format } from 'date-fns';
-import { errorNofity, succesNofity, warningNofity } from '../../Constant/Constant';
+import { errorNofity, warningNofity } from '../../Constant/Constant';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 import InputFileUpload from './ParkingFileupload';
 import { calculateHeight, HandleImageCompression } from '../../Views/CommonComponents/useQueryFunctions';
 import LabourSelectBox from '../../Components/AutoComplete';
 import { useMediaQuery } from '@mui/material';
 import TextComponent from './Component/TextComponent';
+import { ToastContainer } from 'react-toastify';
 
 
 const NewSwiperComponent = lazy(() => import("../../Components/SwiperNew"))
@@ -53,7 +54,7 @@ export default function SingleVehicleModal({
         setPreview([]);
         setDriver("")
         setDriverEmpid("")
-    },[setSelectedFile,setOpening,setPreview])
+    }, [setSelectedFile, setOpening, setPreview])
 
 
     const handlesubmit = useCallback(async (slno) => {
@@ -66,7 +67,6 @@ export default function SingleVehicleModal({
             });
             const { success } = response.data;
             if (success === 2) return errorNofity("error in submitting data");
-            succesNofity("Vehicle removed Successfully")
             setLoading(false)
             handleCloseModal()
             handleclose()
@@ -75,7 +75,7 @@ export default function SingleVehicleModal({
             console.log(err);
             errorNofity("Error occured in Submitting Data")
         }
-    }, [driverempid,handleCloseModal,handleclose,refetch,drivererror]);
+    }, [driverempid, handleCloseModal, handleclose, refetch, drivererror]);
 
 
     const hanldeImageUpload = useCallback(async (path) => {
@@ -99,16 +99,16 @@ export default function SingleVehicleModal({
             });
             const { success } = response.data;
             if (success === 2) return errorNofity("Error in inserting Data!")
-            succesNofity("Inserted Successfully");
             setLoading(false)
-            handleCloseModal()
             handleclose()
+            // succesNofity("Inserted Successfully");
+            handleCloseModal()
             refetch()
         } catch (error) {
             errorNofity("Server Error occured")
         }
 
-    }, [selectedFile,handleCloseModal,handleclose,refetch])
+    }, [selectedFile, handleCloseModal, handleclose, refetch])
 
 
     //parking time
@@ -126,13 +126,13 @@ export default function SingleVehicleModal({
         const minutes = Math.floor((diffInSeconds % (60 * 60)) / 60);
         const seconds = diffInSeconds % 60;
         return `${hours} hr : ${minutes} min : ${seconds} sec`;
-    },[])
+    }, [])
 
 
     return (
         <>
             <Box>
-            
+                <ToastContainer />
                 <Modal
                     aria-labelledby="modal-title"
                     aria-describedby="modal-desc"
@@ -142,16 +142,30 @@ export default function SingleVehicleModal({
                         // width: { xs: '100%', sm: 400, md: 400, lg: 600 },
                         display: 'flex',
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                       
                     }}
                 >
-                    <ModalDialog sx={{
-                        width: { xs: '95%', sm: 400, md: 400, lg: 600 },
+                    {/* <ModalDialog  sx={{
+                        width: { xs: '95%', sm: 600, md: 600, lg: 600 },
                         borderRadius: 'md',
                         p: 2,
                         boxShadow: 'lg',
                         minHeight: 250,
-                    }} >
+                    }} > */}
+                    <Box
+                    sx={{
+                        position:{xs:'relative',sm: 'absolute'},
+                        top: {xs:'',sm: '50%'},
+                        left: {xs:'',sm: '50%'},
+                        transform: {sm:'translate(-50%, -80%)'},
+                        width: { xs: '95%', sm: 600, md: 600, lg: 600 },
+                        bgcolor: 'white',
+                        boxShadow: 'lg',
+                        p: 3,
+                        borderRadius: 2,
+                    }}
+                >
                         <ModalClose
                             variant="plain"
                             sx={{ m: 1 }}
@@ -161,7 +175,10 @@ export default function SingleVehicleModal({
                                 <Box sx={{
                                     width: '100%',
                                     height: calculateHeight(opening, selectedFile),
-                                    backgroundColor: 'white', borderRadius: 2, cursor: 'pointer', position: 'relative'
+                                    backgroundColor: 'white',
+                                     borderRadius: 2, 
+                                     cursor: 'pointer',
+                                      position: 'relative',
                                 }}>
                                     <Typography
                                         variant="h6"
@@ -170,7 +187,7 @@ export default function SingleVehicleModal({
                                     </Typography>
                                     <Box
                                         sx={{
-                                            width: '100%', height: { xs: 200, sm: 230, md: 210 },
+                                            width: '100%', height: { xs: 200, sm: 230, md: 260 },
                                             position: 'relative',
                                             p: 0.5
                                         }}>
@@ -182,7 +199,7 @@ export default function SingleVehicleModal({
                                     </Box>
                                     <Box sx={{ width: '100%', height: '50%', position: 'relative', p: 0.5 }}>
                                         <TextComponent
-                                            label={"Vehicle Number"}
+                                            label={"Vehicle No"}
                                             value={selectedVehicle.vehicle_number}
                                             color={'black'}
                                         />
@@ -230,7 +247,7 @@ export default function SingleVehicleModal({
                                                     display: opening === 'b' ? "none" : 'block'
                                                 }}
                                                 onClick={() => setOpening('a')}>
-                                                Upload 
+                                                Upload
                                             </Button>
                                             <Button
                                                 disabled={opening === 'b'}
@@ -319,7 +336,8 @@ export default function SingleVehicleModal({
                                 </Box>
                             </>
                         )}
-                    </ModalDialog>
+                    {/* </ModalDialog> */}
+                    </Box>
                 </Modal>
             </Box >
         </>

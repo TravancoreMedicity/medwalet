@@ -24,7 +24,7 @@ export default function ZoneMaster() {
 
 
 
-    const { success, data: allzonemaster, refetch } = useQuery({
+    const {  data: allzonemaster, refetch } = useQuery({
         queryKey: ['allzonemaster'],
         queryFn: () => getAllZoneMaster(),
     })
@@ -64,15 +64,15 @@ export default function ZoneMaster() {
     const resetFeild = useCallback(() => {
         setZoneName("")
         setZoneStatus(false)
-    })
+    },[])
     const [colDefs] = useState([
-        { field: 'slNo', flex: 1 },
-        { field: 'ZoneName', flex: 1 },
-        { field: 'Status', flex: 1 },
+        { field: 'slNo' , flex:1,},
+        { field: 'ZoneName' , flex:1,},
+        { field: 'Status' , flex:1,},
         {
             headerName: 'Edit',
             field: 'edit',
-            flex: 1,
+            flex:1,
             cellRenderer: params => (
                 <IconButton sx={{ paddingY: 0.5 }} onClick={() => getEdit(params)}>
                     <EditIcon color='primary' />
@@ -138,7 +138,7 @@ export default function ZoneMaster() {
                 console.log(err);
             }
         }
-    })
+    },[zonename,updateData,insertData,updateflag])
 
 
 
