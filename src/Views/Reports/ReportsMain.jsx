@@ -2,7 +2,6 @@ import { Box } from '@mui/joy'
 import {  Paper } from '@mui/material'
 import { Grid } from '@mui/joy';
 import React, { lazy, memo } from 'react'
-import { ToastContainer } from 'react-toastify'
 import { Link } from 'react-router-dom';
 
 
@@ -19,7 +18,6 @@ function ReportsMain() {
 
     return (
         <Box sx={{ height: window.innerHeight - 100, display: 'flex', alignItems: 'center', justifyContent: 'center', p: 1 }}>
-            <ToastContainer />
             <Paper elevation={3} sx={{ flex: 1, height: window.innerHeight - 120, position: 'relative', px: 1 }}>
                 <ReportHeader name={'REPORTS'} path='/Home/Dashboard'/>
                 <Grid container mb={1}>

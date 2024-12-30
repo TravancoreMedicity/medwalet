@@ -11,6 +11,7 @@ import {
 import Progress from './Components/Progress';
 import InitialLoadingSkeleton from './Components/InitialLoadingSkeleton';
 import CircularProgressThickness from './Components/CircularProgress';
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -114,6 +115,8 @@ const queryClient = new QueryClient()
 
 function App() {
   return (
+    <>
+    <ToastContainer/>
     <Suspense fallback={<Progress />} >
       <QueryClientProvider client={queryClient}>
         <RouterProvider
@@ -122,6 +125,7 @@ function App() {
         />
       </QueryClientProvider>
     </Suspense>
+    </>
   );
 }
 

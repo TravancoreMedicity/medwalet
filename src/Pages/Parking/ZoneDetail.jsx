@@ -3,7 +3,6 @@ import React, { memo } from 'react'
 import { Grid } from '@mui/joy';
 
 const ZoneDetail = ({ zone, vehilce }) => {
-
   return (
     <Box>
       <Grid
@@ -44,7 +43,7 @@ const ZoneDetail = ({ zone, vehilce }) => {
                 }}>
                   <Box sx={{ width: '100%', height: '100%', py: 2, px: 2, display: 'flex', alignItems: 'center', justifyContent: { xs: 'space-between', sm: 'space-between', md: 'center' }, flexDirection: { sm: 'column', md: 'column' } }}>
                     <Typography sx={{ fontSize: { xs: 15, sm: 19, md: 18, lg: 20 }, color: 'white' }}>{type?.zone_name}</Typography>
-                    <Typography sx={{ fontSize: { xs: 15, sm: 18, md: 18, lg: 20 }, fontWeight: 500, color: 'white' }}>{count?.length}/20</Typography>
+                    <Typography sx={{ fontSize: { xs: 15, sm: 18, md: 18, lg: 20 }, fontWeight: 500, color: 'white' }}>{type?.slot_count-count?.length}/{type?.slot_count}</Typography>
                   </Box>
                 </Box>
               </Grid>

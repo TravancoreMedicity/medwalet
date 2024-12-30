@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import { employeeID, errorNofity, succesNofity, warningNofity } from '../../../Constant/Constant'
-import { ToastContainer } from 'react-toastify';
 import { axioslogin } from '../../../AxiosConfig/Axiox';
 import { useQuery } from '@tanstack/react-query'
 import MasterTable from '../../CommonComponents/MasterTable';
@@ -24,13 +23,13 @@ export default function ZoneMaster() {
 
 
 
-    const {  data: allzonemaster, refetch } = useQuery({
+    const { data: allzonemaster, refetch } = useQuery({
         queryKey: ['allzonemaster'],
         queryFn: () => getAllZoneMaster(),
     })
 
 
-    
+
     const formattedData = allzonemaster ?
         allzonemaster.map((zone) => ({
             slNo: zone.zone_slno,
@@ -41,38 +40,37 @@ export default function ZoneMaster() {
 
 
 
-    
+
 
     const getemployeeid = useMemo(() => {
         return employeeID();
     }, []);
 
-    const insertData = {
+    const insertData = useMemo(() => ({
         zone_name: zonename,
         zone_status: zonestatus ? 1 : 0,
         create_user: getemployeeid
-    }
+    }),[getemployeeid,zonestatus,zonename])
 
-
-    const updateData = {
+    const updateData = useMemo(()=>({
         zone_name: zonename,
         zone_status: zonestatus ? 1 : 0,
         edit_user: getemployeeid,
         zone_slno: updatedata.slNo
-    }
+    }),[updatedata,getemployeeid,zonestatus,zonename])
 
     const resetFeild = useCallback(() => {
         setZoneName("")
         setZoneStatus(false)
-    },[])
+    }, [])
     const [colDefs] = useState([
-        { field: 'slNo' , flex:1,},
-        { field: 'ZoneName' , flex:1,},
-        { field: 'Status' , flex:1,},
+        { field: 'slNo', flex: 1, },
+        { field: 'ZoneName', flex: 1, },
+        { field: 'Status', flex: 1, },
         {
             headerName: 'Edit',
             field: 'edit',
-            flex:1,
+            flex: 1,
             cellRenderer: params => (
                 <IconButton sx={{ paddingY: 0.5 }} onClick={() => getEdit(params)}>
                     <EditIcon color='primary' />
@@ -138,7 +136,7 @@ export default function ZoneMaster() {
                 console.log(err);
             }
         }
-    },[zonename,updateData,insertData,updateflag])
+    }, [zonename, updateData, insertData, updateflag, resetFeild, refetch])
 
 
 
@@ -147,7 +145,6 @@ export default function ZoneMaster() {
 
         <>
             <Box sx={{ width: '100%', height: '93vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ToastContainer />
                 <Paper elevation={3} sx={{ width: '98%', height: '95%' }}>
                     <MasterHeader name={"Zone Master"} />
                     <Box sx={{ width: '100%', height: '90%', display: 'flex' }}>

@@ -5,7 +5,7 @@ import Typography from '@mui/joy/Typography';
 import Divider from '@mui/joy/Divider';
 import { Box, Button } from '@mui/joy';
 import { format } from 'date-fns';
-import { errorNofity, warningNofity } from '../../Constant/Constant';
+import { errorNofity, succesNofity, warningNofity } from '../../Constant/Constant';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 import InputFileUpload from './ParkingFileupload';
 import {
@@ -16,7 +16,7 @@ import {
 import LabourSelectBox from '../../Components/AutoComplete';
 import { useMediaQuery } from '@mui/material';
 import TextComponent from './Component/TextComponent';
-import { ToastContainer } from 'react-toastify';
+
 
 
 const NewSwiperComponent = lazy(() => import("../../Components/SwiperNew"))
@@ -72,6 +72,7 @@ export default function SingleVehicleModal({
             const { success } = response.data;
             if (success === 2) return errorNofity("error in submitting data");
             setLoading(false)
+            succesNofity("Updated Successfully")
             handleCloseModal()
             handleclose()
             refetch()
@@ -105,7 +106,7 @@ export default function SingleVehicleModal({
             if (success === 2) return errorNofity("Error in inserting Data!")
             setLoading(false)
             handleclose()
-            // succesNofity("Inserted Successfully");
+            succesNofity("Uploaded Successfully");
             handleCloseModal()
             refetch()
         } catch (error) {
@@ -125,7 +126,6 @@ export default function SingleVehicleModal({
     return (
         <>
             <Box>
-                <ToastContainer />
                 <Modal
                     aria-labelledby="modal-title"
                     aria-describedby="modal-desc"
@@ -232,7 +232,7 @@ export default function SingleVehicleModal({
                                         <Divider sx={{ mt: 1 }} />
                                         <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
                                             <Button
-                                                disabled={opening === 'a'}
+                                                disabled={opening === 'a' || selectedVehicle?.images.length >= 5 || loading}
                                                 color={opening === 'a' ? "neutral" : "success"}
                                                 sx={{
                                                     width: opening === 'a' ? '100%' : '48%',
@@ -240,7 +240,10 @@ export default function SingleVehicleModal({
                                                     display: opening === 'b' ? "none" : 'block'
                                                 }}
                                                 onClick={() => setOpening('a')}>
-                                                Upload
+                                                {
+                                                    selectedVehicle?.images.length + selectedFile.length >= 5
+                                                        ? "Limit Exeeded" : "upload"
+                                                }
                                             </Button>
                                             <Button
                                                 disabled={opening === 'b'}
@@ -279,7 +282,7 @@ export default function SingleVehicleModal({
                                                             {loading
                                                                 ? "Processing"
                                                                 : (selectedVehicle?.images.length >= 5 || (selectedVehicle?.images.length + selectedFile.length) >= 5
-                                                                    ? "Max"
+                                                                    ? "Limit Exeeded"
                                                                     : `upload ${5 - (selectedVehicle?.images.length + selectedFile.length)} more`)
                                                             }
                                                         </Button>

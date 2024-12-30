@@ -8,7 +8,6 @@ import Checkbox from '@mui/joy/Checkbox';
 import Button from '@mui/material/Button';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import Tooltip from '@mui/material/Tooltip';
-import { ToastContainer } from 'react-toastify';
 import { axioslogin } from '../../../AxiosConfig/Axiox';
 import { useQuery } from '@tanstack/react-query';
 import { getAllUserMaster, getAllZoneMaster } from '../../CommonComponents/useQueryFunctions';
@@ -138,7 +137,6 @@ export default function UserMaster() {
     return (
 
         <Box sx={{ width: '100%', height: '93vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ToastContainer />
             <Paper elevation={3} sx={{ width: '98%', height: '95%' }}>
                 <MasterHeader name={"User Master"} />
                 <Box sx={{ width: '100%', height: '90%', display: 'flex' }}>

@@ -1,6 +1,5 @@
 import React, { lazy, useCallback, useMemo, useState } from 'react';
 import { Box, Paper, Typography } from '@mui/material'
-import { ToastContainer } from 'react-toastify';
 import {
     getAllDriverUserRight,
     getallPresentDriver,
@@ -80,11 +79,11 @@ export default function DriverMaster() {
         };
         try {
             const result = await axioslogin.post("/medvallet/createnewCurrentDriver", formattedData);
-            const { success, message } = result.data;
+            const { success } = result.data;
             if (success === 2) {
                 errorNofity("Error in creating User!");
             } else {
-                succesNofity(message);
+                 succesNofity("Attendace updated");
                 // setCheckedYes({});
                 fetchDriver();
             }
@@ -201,7 +200,6 @@ export default function DriverMaster() {
             justifyContent: 'center',
             position: 'relative',
         }}>
-            <ToastContainer />
             <Paper
                 elevation={3}
                 sx={{

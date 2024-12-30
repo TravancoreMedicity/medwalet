@@ -15,7 +15,6 @@ import {
     getAllUserRights
 } from '../../CommonComponents/useQueryFunctions';
 import { employeeID, errorNofity, succesNofity, warningNofity } from '../../../Constant/Constant';
-import { ToastContainer } from 'react-toastify';
 import { axioslogin } from '../../../AxiosConfig/Axiox';
 import MasterTable from '../../CommonComponents/MasterTable';
 import EditIcon from '@mui/icons-material/Edit';
@@ -48,32 +47,32 @@ export default function UserRightMaster() {
     const [updatedata, setUpdateData] = useState({})
 
     //get all deparment
-    const { success, data: department } = useQuery({
+    const {  data: department } = useQuery({
         queryKey: ["department"],
         queryFn: getDepartment,
     })
 
     //get all deparment section
-    const { success: departsecsuccess, data: departmentsec } = useQuery({
+    const { data: departmentsec } = useQuery({
         queryKey: ["departmentselection", departmentid],
         queryFn: () => getDepartmentSection(departmentid),
         enabled: !!departmentid, // Trigger only if dept_id is available
     });
 
     //get all deparment employee
-    const { success: employeesuccess, data: departmeentemployee } = useQuery({
+    const {  data: departmeentemployee } = useQuery({
         queryKey: ["departmentemeployye", SectionId],
         queryFn: () => getDepartmentEmployee(SectionId),
         enabled: !!SectionId,
     });
 
-    const { success: usermastersuccess, data: alluserMaster } = useQuery({
+    const {  data: alluserMaster } = useQuery({
         queryKey: ['alluserMaster'],
         queryFn: () => getAllUserMaster(),
         enabled: !!departmentid
     })
 
-    const { success: userrightsuccess, data: allusersright, refetch: fetchuserright } = useQuery({
+    const {  data: allusersright, refetch: fetchuserright } = useQuery({
         queryKey: ['allusersright'],
         queryFn: () => getAllUserRights(),
     })
@@ -85,7 +84,7 @@ export default function UserRightMaster() {
         user_group_id: userid,
         status: status ? 1 : 0,
         create_user: employeeID()
-    }), [departmentid, SectionId, employeeid, userid, status, employeeID]);
+    }), [departmentid, SectionId, employeeid, userid, status]);
 
     const updateData = useMemo(() => ({
         dept_id: departmentid,
@@ -95,7 +94,7 @@ export default function UserRightMaster() {
         status: status ? 1 : 0,
         edit_user: employeeID(),
         right_slno: updatedata.slNo,
-    }), [updatedata, departmentid, SectionId, employeeid, userid, status, employeeID])
+    }), [updatedata, departmentid, SectionId, employeeid, userid, status])
 
 
     const resetall = useCallback(() => {
@@ -104,7 +103,7 @@ export default function UserRightMaster() {
         setEmployeeId(0)
         setUserId(0)
         setStatus(false)
-    })
+    },[])
 
     const hanldeSubmitForm = useCallback(async () => {
         if (departmentid === 0
@@ -116,8 +115,6 @@ export default function UserRightMaster() {
             try {
                 const response = await axioslogin.post("/medvallet/createuserRight", InsertionData);
                 const { success } = response.data;
-                console.log(success, "success");
-
                 if (success === 2) {
                     errorNofity("Data Already exists!")
                     resetall()
@@ -145,7 +142,7 @@ export default function UserRightMaster() {
                 console.log(err);
             }
         }
-    }, [updateData, InsertionData])
+    }, [updateData, InsertionData,departmentid,SectionId,userid,fetchuserright,resetall,updateFlag])
 
 
 
@@ -183,9 +180,7 @@ export default function UserRightMaster() {
         })) : []
 
 
-
     const getEdit = useCallback((params) => {
-
         const rowData = params.data;
         setDepartmentId(rowData.depid);
         setSectionId(rowData.secid);
@@ -194,13 +189,13 @@ export default function UserRightMaster() {
         setStatus(rowData.Status === "Active" ? true : false)
         setUpdateFlag(1)
         setUpdateData(rowData)
-    }, [department]);
+    }, []);
 
 
 
     return (
         <>
-            <ToastContainer />
+        
             <Box sx={{ width: '100%', height: '93vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Paper elevation={3} sx={{ width: '98%', height: "90%", position: 'relative' }}>
                     <MasterHeader name={"Driver Master"} />

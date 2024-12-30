@@ -9,12 +9,12 @@ import {
     isValidMobileNumber,
     isValidVehicleNumber
 } from '../../Constant/Constant'
-import { ToastContainer } from 'react-toastify';
 import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import { getAllSlotMaster, HandleImageCompression } from '../../Views/CommonComponents/useQueryFunctions';
 import { useQuery } from '@tanstack/react-query';
 import { axioslogin } from '../../AxiosConfig/Axiox';
+import { ToastContainer } from 'react-toastify';
 
 const defaulimage = require('../../assets/parking/defaultnoimag.jpeg')
 
@@ -290,7 +290,6 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
             alignItems: 'center',
             justifyContent: 'center'
         }}>
-            <ToastContainer />
             <Box
                 sx={{
                     width: { xs: '100%', sm: '100%' },

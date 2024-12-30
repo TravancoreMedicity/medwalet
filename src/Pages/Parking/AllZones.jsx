@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material'
 import React, { lazy, Suspense } from 'react'
 import Skeleton from '@mui/material/Skeleton';
 import VehicleSkeleton from './Component/VehicleSkeleton';
-import { ToastContainer } from 'react-toastify';
+
 
 const AllVehicles = lazy(() => import("./AllVehicles"))
 
@@ -47,7 +47,6 @@ export default function AllZones({ allvehicles, isLoading, isError, refetch }) {
 
     return (
         <Box >
-            {/* <ToastContainer /> */}
             {
                 groupedByZone &&
                 Object.entries(groupedByZone)

@@ -73,11 +73,11 @@ function AttendaceCard() {
 
         try {
             const result = await axioslogin.post("/medvallet/createnewCurrentDriver", formattedData);
-            const { success, message } = result.data;
+            const { success } = result.data;
             if (success === 2) {
                 errorNofity("Error in creating User!");
             } else {
-                succesNofity(message);
+                succesNofity("Attendace updated");
                 // setCheckedYes({});
                 fetchDriver();
             }

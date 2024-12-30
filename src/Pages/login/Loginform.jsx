@@ -6,7 +6,6 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
 import { succesNofity, errorNofity, sanitizeToNumbers } from '../../Constant/Constant';
-import { ToastContainer } from 'react-toastify';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 
 
@@ -125,7 +124,6 @@ function Loginform() {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-      <ToastContainer />
       <Typography sx={{
         display: { xs: 'none', sm: 'block' },
         color: 'black',

@@ -12,7 +12,7 @@ export default function LabourSelectBox({ driverselection, driver, setDriverEmpi
     currentDate: TodayData
   }), [TodayData]);
 
-  const { success: attendancesuccess, data: dirverAttendace, refetch: fetchDriver } = useQuery({
+  const {  data: dirverAttendace,  } = useQuery({
     queryKey: ['dirverAttendace'],
     queryFn: () => getallDriverforDropdown(postData),
     onError: (error) => {

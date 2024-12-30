@@ -5,7 +5,7 @@ import { Box, styled } from '@mui/joy';
 import Badge from '@mui/material/Badge';
 import { Typography } from '@mui/material';
 import { warningNofity } from '../../Constant/Constant';
-import { ToastContainer } from 'react-toastify';
+
 
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -78,8 +78,8 @@ export default function InputFileUpload({
     const newPreviews = newFiles?.map((file) => URL.createObjectURL(file))
 
     if( selectedFile && selectedFile?.length + newFiles?.length > 5 -limit ){
-      if((5-limit) <= 0) {
-        warningNofity(` Max files Uploaded.`);
+      if(limit + selectedFile?.length >= 5) {
+        warningNofity(` Maximum files Uploaded.`);
       }else{
         warningNofity(` Only Select ${ 5 - limit} Files.`);
       }  
