@@ -16,7 +16,7 @@ export default function LabourSelectBox({ driverselection, driver, setDriverEmpi
     queryKey: ['dirverAttendace'],
     queryFn: () => getallDriverforDropdown(postData),
     onError: (error) => {
-      console.error("Error fetching driver attendance:", error);
+      console.log("Error fetching driver attendance:", error);
     },
   });
 

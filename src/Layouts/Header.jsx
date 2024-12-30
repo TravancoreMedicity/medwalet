@@ -25,7 +25,6 @@ const Header = ({ toggleDrawer, isSmallScreen }) => {
         <Box sx={{
             width: '100%',
             height: '7vh',
-            bgcolor: 'white',
             boxShadow: 5,
             display: 'flex',
             alignItems: 'center',
@@ -47,7 +46,12 @@ const Header = ({ toggleDrawer, isSmallScreen }) => {
                     </Button>
                 )}
                 <Box sx={{ display: 'flex', alignItems: 'center', fontSize: { xs: 14, sm: 18 }, fontWeight: 500, color: 'black', width: "100%", position: 'relative' }}>
-                    <img src={newlogo} width={30} height={30} />
+                    <img
+                        src={newlogo}
+                        width={30}
+                        height={30}
+                        alt='medicity-logo'
+                    />
                     <Typography sx={{ fontFamily: 'Roboto', mt: 1 }}>Travancore Medicity</Typography>
                 </Box>
             </Box>
@@ -78,8 +82,8 @@ const Header = ({ toggleDrawer, isSmallScreen }) => {
 
                             <Tooltip title="Search Vehicles">
                                 <SearchSharpIcon
-                                sx={{ color: "white", cursor: 'pointer'}}
-                                onClick={() => navigate("/Home/search")}
+                                    sx={{ color: "white", cursor: 'pointer' }}
+                                    onClick={() => navigate("/Home/search")}
                                 />
                             </Tooltip>
                             <Tooltip title="Logout">

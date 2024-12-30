@@ -4,11 +4,15 @@ import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
 import Divider from '@mui/joy/Divider';
 import { Box, Button } from '@mui/joy';
-import { differenceInSeconds, format } from 'date-fns';
+import { format } from 'date-fns';
 import { errorNofity, warningNofity } from '../../Constant/Constant';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 import InputFileUpload from './ParkingFileupload';
-import { calculateHeight, HandleImageCompression } from '../../Views/CommonComponents/useQueryFunctions';
+import {
+    calculateHeight,
+    calculateTotalTime,
+    HandleImageCompression
+} from '../../Views/CommonComponents/useQueryFunctions';
 import LabourSelectBox from '../../Components/AutoComplete';
 import { useMediaQuery } from '@mui/material';
 import TextComponent from './Component/TextComponent';
@@ -117,17 +121,6 @@ export default function SingleVehicleModal({
         return datefm
     }, [])
 
-    const calculateTotalTime = useCallback((create_date) => {
-        const createdDate = new Date(create_date);
-        const currentDate = new Date();
-        // Calculate the difference
-        const diffInSeconds = Math.abs(differenceInSeconds(createdDate, currentDate));
-        const hours = Math.floor((diffInSeconds % (24 * 60 * 60)) / (60 * 60));
-        const minutes = Math.floor((diffInSeconds % (60 * 60)) / 60);
-        const seconds = diffInSeconds % 60;
-        return `${hours} hr : ${minutes} min : ${seconds} sec`;
-    }, [])
-
 
     return (
         <>
@@ -143,7 +136,7 @@ export default function SingleVehicleModal({
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                       
+
                     }}
                 >
                     {/* <ModalDialog  sx={{
@@ -154,18 +147,18 @@ export default function SingleVehicleModal({
                         minHeight: 250,
                     }} > */}
                     <Box
-                    sx={{
-                        position:{xs:'relative',sm: 'absolute'},
-                        top: {xs:'',sm: '50%'},
-                        left: {xs:'',sm: '50%'},
-                        transform: {sm:'translate(-50%, -80%)'},
-                        width: { xs: '95%', sm: 600, md: 600, lg: 600 },
-                        bgcolor: 'white',
-                        boxShadow: 'lg',
-                        p: 3,
-                        borderRadius: 2,
-                    }}
-                >
+                        sx={{
+                            position: { xs: 'relative', sm: 'absolute' },
+                            top: { xs: '', sm: '50%' },
+                            left: { xs: '', sm: '50%' },
+                            transform: { sm: 'translate(-50%, -55%)', md: 'translate(-50%, -60%)' },
+                            width: { xs: '95%', sm: 600, md: 600, lg: 600 },
+                            bgcolor: 'white',
+                            boxShadow: 'lg',
+                            p: 3,
+                            borderRadius: 2,
+                        }}
+                    >
                         <ModalClose
                             variant="plain"
                             sx={{ m: 1 }}
@@ -176,9 +169,9 @@ export default function SingleVehicleModal({
                                     width: '100%',
                                     height: calculateHeight(opening, selectedFile),
                                     backgroundColor: 'white',
-                                     borderRadius: 2, 
-                                     cursor: 'pointer',
-                                      position: 'relative',
+                                    borderRadius: 2,
+                                    cursor: 'pointer',
+                                    position: 'relative',
                                 }}>
                                     <Typography
                                         variant="h6"
@@ -187,7 +180,7 @@ export default function SingleVehicleModal({
                                     </Typography>
                                     <Box
                                         sx={{
-                                            width: '100%', height: { xs: 200, sm: 230, md: 260 },
+                                            width: '100%', height: { xs: 200, sm: 230, md: 290 },
                                             position: 'relative',
                                             p: 0.5
                                         }}>
@@ -336,7 +329,7 @@ export default function SingleVehicleModal({
                                 </Box>
                             </>
                         )}
-                    {/* </ModalDialog> */}
+                        {/* </ModalDialog> */}
                     </Box>
                 </Modal>
             </Box >

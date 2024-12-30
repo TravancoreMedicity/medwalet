@@ -1,3 +1,4 @@
+import { differenceInSeconds } from 'date-fns';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 import imageCompression from 'browser-image-compression';
 
@@ -131,7 +132,7 @@ export const getAllDriverUserRight = async () => {
 }
 
 
-export const getAllAttendaceReport = async () =>{
+export const getAllAttendaceReport = async () => {
     return axioslogin.get('/medvallet/getAllAttendaceReport').then((res) => {
         const { success, data } = res.data;
         if (success === 1) {
@@ -142,11 +143,11 @@ export const getAllAttendaceReport = async () =>{
 
 export const calculateHeight = (opening, selectedFile) => {
     if (selectedFile.length > 0) {
-        return { xs: 625, sm: 720, md: 710, lg: 720 };
+        return { xs: 625, sm: 700, md: 740, lg: 740 };
     } else if (opening) {
-        return { xs: 530, sm: 600, md: 630, lg: 630 };
+        return { xs: 530, sm: 600, md: 650, lg: 650 };
     } else {
-        return { xs: 430, sm: 500, md: 530, lg: 530 };
+        return { xs: 430, sm: 500, md: 550, lg: 550 };
     }
 };
 
@@ -166,3 +167,15 @@ export const HandleImageCompression = async (files) => {
         console.log("error in compressing image");
     }
 };
+
+
+export const calculateTotalTime = (create_date) => {
+    const createdDate = new Date(create_date);
+    const currentDate = new Date();
+    // Calculate the difference
+    const diffInSeconds = Math.abs(differenceInSeconds(createdDate, currentDate));
+    const hours = Math.floor((diffInSeconds % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((diffInSeconds % (60 * 60)) / 60);
+    const seconds = diffInSeconds % 60;
+    return `${hours} hr : ${minutes} min : ${seconds} sec`;
+}
