@@ -16,12 +16,12 @@ const AllZones = lazy(() => import("./Parking/AllZones"))
 const Dashboard = () => {
 
   //fetches the all vehicle details
-  const { success, data: allvehicles, isLoading, isError, refetch } = useQuery({
+  const { data: allvehicles, isLoading, isError, refetch } = useQuery({
     queryKey: ['allvehicles'],
     queryFn: () => getAllVehicles()
   });
 
-  const { success:SlotMasterSuccess, data: allslotMaster } = useQuery({
+  const {  data: allslotMaster } = useQuery({
     queryKey: ['allslotMaster'],
     queryFn: () => getAllSlotMaster(),
   })

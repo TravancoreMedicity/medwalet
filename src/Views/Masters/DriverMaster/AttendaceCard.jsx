@@ -17,7 +17,7 @@ function AttendaceCard() {
     let TodayData = new Date().toISOString().slice(0, 10);
     let CurrentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
 
-    const { success: userrightsuccess, data: allusersright, refetch: fetchuserright } = useQuery({
+    const { data: allusersright } = useQuery({
         queryKey: ['getAllDriverUserRight'],
         queryFn: () => getAllDriverUserRight(),
     });
@@ -26,28 +26,13 @@ function AttendaceCard() {
         currentDate: TodayData
     }), [TodayData]);
 
-    const { success: attendancesuccess, data: dirverAttendace, refetch: fetchDriver } = useQuery({
+    const {  data: dirverAttendace, refetch: fetchDriver } = useQuery({
         queryKey: ['dirverAttendace'],
         queryFn: () => getallPresentDriver(postData),
         onError: (error) => {
             console.log("Error fetching driver attendance:", error);
         },
     });
-
-    const handleCheckboxChange = useCallback((empid, value) => {
-        if (checkedYes.empid === empid && checkedYes.status === value) {
-            return;
-        }
-
-        const updatedCheckedYes = {
-            empid: empid,
-            status: value
-        };
-        setCheckedYes(updatedCheckedYes);
-        handleattendance(updatedCheckedYes);
-    }, [checkedYes, dirverAttendace]);
-
-
 
 
     const handleattendance = useCallback(async (updatedCheckedYes) => {
@@ -84,7 +69,21 @@ function AttendaceCard() {
         } catch (err) {
             warningNofity("Error during attendance submission:", err);
         }
-    }, [dirverAttendace, TodayData, CurrentTime]);
+    }, [dirverAttendace, TodayData, CurrentTime,fetchDriver]);
+
+
+    const handleCheckboxChange = useCallback((empid, value) => {
+        if (checkedYes.empid === empid && checkedYes.status === value) {
+            return;
+        }
+
+        const updatedCheckedYes = {
+            empid: empid,
+            status: value
+        };
+        setCheckedYes(updatedCheckedYes);
+        handleattendance(updatedCheckedYes);
+    }, [ handleattendance,checkedYes]);
 
 
 
@@ -100,7 +99,7 @@ function AttendaceCard() {
                     };
                 })
             : [];
-    }, [allusersright, checkedYes]);
+    }, [allusersright]);
 
 
     return (

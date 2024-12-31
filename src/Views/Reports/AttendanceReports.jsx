@@ -58,7 +58,7 @@ function AttendanceReports() {
       setDriverEmpid("")
     }
 
-  },[]);
+  }, []);
 
   const driverselection = useCallback((driver) => {
     if (!driver) {
@@ -67,14 +67,12 @@ function AttendanceReports() {
     setDriver(driver);
   }, []);
 
-  const {  data: AttendaceReport, isLoading: Attendaceloading } = useQuery({
+  const { data: AttendaceReport, isLoading: Attendaceloading } = useQuery({
     queryKey: ['getAllAttendaceReport'],
     queryFn: () => getAllAttendaceReport(),
   });
 
 
-
-  
 
   const handleEmployeeSearch = useCallback(async () => {
     setSelectedValue("")
@@ -121,18 +119,62 @@ function AttendanceReports() {
       : selectedValue === 'c' ? vehiclebetweendate
         : employeeDetail
 
+        
+
+
 
   const formattedfinalData = useMemo(() => {
     if (!MappingData) return [];
-    return MappingData?.map((data, index) => ({
-      slNo: index + 1,
-      DriverName: data?.em_name,
-      CheckIn: data?.check_in_time,
-      Checkout: data?.check_out_time === "9999-12-31 23:59:59" ? "Not Checked Out" : data?.check_out_time,
-      TotalCount: data?.vehicle_count
-    }));
-  })
-
+  
+    // Group the data by driver_id, and sort by attendance time
+    const groupedData = MappingData
+      .sort((a, b) => new Date(a.atendnace_time) - new Date(b.atendnace_time)) // Sort by attendance time
+      .reduce((acc, data) => {
+        const { driver_id, attendnace_status, atendnace_time, em_name } = data;
+  
+        // Initialize if the driver doesn't exist yet
+        if (!acc[driver_id]) {
+          acc[driver_id] = {
+            DriverName: em_name,
+            CheckInTimes: [],
+            CheckOutTimes: [],
+          };
+        }
+  
+        // Add times to check-in and check-out arrays based on status
+        if (attendnace_status === 'I') {
+          acc[driver_id].CheckInTimes.push(atendnace_time);
+        } else if (attendnace_status === 'O') {
+          acc[driver_id].CheckOutTimes.push(atendnace_time === "9999-12-31 23:59:59" ? "Not Checked Out" : atendnace_time);
+        }
+  
+        return acc;
+      }, {});
+  
+    // Format the grouped data into pairs and generate sequential slNo
+    const result = Object.values(groupedData).map((driverData, index) => {
+      const { DriverName, CheckInTimes, CheckOutTimes } = driverData;
+      const pairs = [];
+  
+      // Loop through the CheckInTimes and pair them with CheckOutTimes
+      const maxCount = Math.max(CheckInTimes.length, CheckOutTimes.length);
+      for (let i = 0; i < maxCount; i++) {
+        pairs.push({
+          slNo: pairs.length + 1, // Sequential number for each pair
+          DriverName,
+          CheckIn: CheckInTimes[i] || "Not Checked In", // Handle missing check-ins
+          Checkout: CheckOutTimes[i] || "Not Checked Out", // Handle missing check-outs
+        });
+      }
+  
+      return pairs;
+    });
+  
+    return result.flat().sort((a, b) => a.slNo - b.slNo); // Flatten and sort by slNo
+  }, [MappingData]);
+  
+  
+  
 
   const colDefs = useMemo(
     () => [

@@ -12,9 +12,9 @@ function TextComponent({label,value,color}) {
                     <strong>{label}</strong>
                 </Typography>
             </Box>
-            <Box sx={{ width:{xs:"60%", sm:'70%',md:'70%',lg:'50%'} }}>
+            <Box sx={{ width:{xs:"60%", sm:'70%',md:'70%',lg:'65%'} }}>
                 <Typography
-                    sx={{ fontSize: { xs: 12, sm: 15, md: 16, lg: 16 },color:color }}
+                    sx={{ fontSize: { xs: 12, sm: 15, md: 16, lg: 14 },color:color }}
                 > :{value}
                 </Typography>
             </Box>

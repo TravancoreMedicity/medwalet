@@ -24,7 +24,7 @@ export default function AllVehicles({ vehicles, refetch }) {
   const handleVehicleSelect = useCallback((vehicle) => {
     setSelectedVehicle(vehicle)
     setOpenModal(true)
-  })
+  },[])
   //helps for the modal closing...!
   const handleCloseModal = useCallback(() => {
     setOpenModal(false);
@@ -32,7 +32,7 @@ export default function AllVehicles({ vehicles, refetch }) {
     setSelectedVehicle(null);
     setSelectedFile([])
     setPreview([])
-  })
+  },[])
 
   return (
     <Box
@@ -124,8 +124,8 @@ export default function AllVehicles({ vehicles, refetch }) {
                       color={'white'}
                     />
                     <TextComponent
-                      label={"TokenNo"}
-                      value={item.token_number}
+                      label={"ZoneType"}
+                      value={item.zone_name}
                       color={'white'}
                     />
                   </Box>

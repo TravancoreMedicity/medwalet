@@ -18,17 +18,6 @@ export default function AllZones({ allvehicles, isLoading, isError, refetch }) {
     //The given reduce method iterates over an array, 
     // applying a reducer function to each element, accumulating a 
     // single output value .Here in our case it will group the data based on zone_name.
-    // const groupedByZone = allvehicles?
-    // .sort(([, a], [, b]) => a.slno - b.slno)
-    // .reduce((acc, vehicle) => {
-    //     const zone = vehicle.zone_name || "Unknown Zone";
-    //     if (!acc[zone]) {
-    //         acc[zone] = [];
-    //     }
-    //     acc[zone].push(vehicle);
-    //     return acc;
-    // }, {});
-
     const groupedByZone = allvehicles
     ?.sort((a, b) => (a.zone_slno) - (b.zone_slno)) 
     .reduce((acc, vehicle) => {
@@ -39,10 +28,6 @@ export default function AllZones({ allvehicles, isLoading, isError, refetch }) {
         acc[zone].push(vehicle);
         return acc;
     }, {});
-
-
-
-
 
 
     return (
@@ -66,7 +51,7 @@ export default function AllZones({ allvehicles, isLoading, isError, refetch }) {
                                 }}>
                                 {
                                     isLoading
-                                        ? <Skeleton animation="wave" variant="circular" width={40} height={40} />
+                                        ? <Skeleton animation="wave" variant="rectangle" width={40} height={40} />
                                         : zonename
                                 }</Typography>
                             <Suspense

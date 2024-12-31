@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useCallback, useMemo, useState } from 'react'
-import { Box, Button, Typography, useScrollTrigger } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import Input from '@mui/joy/Input';
 import {
     warningNofity,
@@ -14,7 +14,7 @@ import Divider from '@mui/joy/Divider';
 import { getAllSlotMaster, HandleImageCompression } from '../../Views/CommonComponents/useQueryFunctions';
 import { useQuery } from '@tanstack/react-query';
 import { axioslogin } from '../../AxiosConfig/Axiox';
-import { ToastContainer } from 'react-toastify';
+
 
 const defaulimage = require('../../assets/parking/defaultnoimag.jpeg')
 
@@ -36,8 +36,9 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
     const [drivererror, setDriverError] = useState("");
     const [slotnumber, setSlotNumber] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+
     const [formData, setFormData] = useState({
-        selectedVallet: 0,
+        selectedVallet: 1,
         selectZone: 0,
         ownerName: "",
         mobileNo: "",
@@ -52,13 +53,22 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
         vehicleNoError: "",
         nameError: "",
         slotError: "",
-        inputError: ""
+        inputError: "",
+        tokenError: ""
     });
 
 
 
-   
-    
+
+    const validate_mobilenumber = useCallback((mobileNo) => {
+        if (!isValidMobileNumber(mobileNo)) return "Mobile number should be 10 digits long"
+        return ''
+    },[])
+    const validate_VehicleNumber = useCallback((vehicleNo) => {
+        if (!isValidVehicleNumber(vehicleNo)) return 'No contain special characters and Spaces';
+        if (vehicleNo.length > 15) return 'Enter a valid Vehicle number'
+        return '';
+    },[])
 
     //handle all states
     const handleInputChange = useCallback((e, field) => {
@@ -76,26 +86,16 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
             const vehicleError = validate_VehicleNumber(value);
             setFormErrors((prevState) => ({ ...prevState, vehicleNoError: vehicleError }));
         }
-
-        if (field === 'ownerName') {
-            setFormErrors((prevState) => ({ ...prevState, nameError: value.trim() ? "" : "Owner name is required" }));
-        }
-
         if (field === 'paymentid') {
             setFormErrors((prevState) => ({ ...prevState, inputError: value.trim() ? "" : "Transaction id is required" }));
         }
-    });
+        if (field === 'tokenNumber') {
+            setFormErrors((prevState) => ({ ...prevState, tokenError: value.trim() ? "" : "Token Number  is required" }));
+        }
+    }, [validate_mobilenumber, validate_VehicleNumber]);
 
 
-    const validate_mobilenumber = useCallback((mobileNo) => {
-        if (!isValidMobileNumber(mobileNo)) return "Mobile number should be 10 digits long"
-        return ''
-    })
-    const validate_VehicleNumber = useCallback((vehicleNo) => {
-        if (!isValidVehicleNumber(vehicleNo)) return 'No contain special characters and Spaces';
-        if (vehicleNo.length > 15) return 'Enter a valid Vehicle number'
-        return '';
-    })
+
 
     //current the driver seletion is static because the driver master is not yet created
     const driverselection = useCallback((driver) => {
@@ -110,7 +110,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
 
 
     //fetching all the Zone from the zone master
-    const { success, data: allslotMaster } = useQuery({
+    const { data: allslotMaster } = useQuery({
         queryKey: ['allslotMaster'],
         queryFn: () => getAllSlotMaster(),
     })
@@ -145,14 +145,15 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
             owner_name: formData.ownerName,
             mobile_number: formData.mobileNo,
             vehicle_number: formData.vehicleNo,
-            token_number: slotnumber,
+            slot_number: slotnumber,
+            token_number: formData.tokenNumber,
             driver_emid: formData.driver_empid,
             attachment_name: formData.paymentAttachment,
             payment_type: formData.selectupivallet,
             upi_payment_transactionid: formData.paymentid,
             create_user: employeeID()
         }
-    }, [formData.selectedVallet, formData.selectZone, formData.ownerName, formData.mobileNo, formData.vehicleNo, slotnumber, formData.driver_empid, formData.selectupivallet, formData.paymentAttachment, formData.paymentid])
+    }, [formData.selectedVallet, formData.selectZone, formData.ownerName, formData.mobileNo, formData.vehicleNo, slotnumber, formData.driver_empid, formData.selectupivallet, formData.paymentAttachment, formData.paymentid, formData.tokenNumber])
 
 
 
@@ -171,14 +172,14 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
             warningNofity("Please select the Zone Type");
             hasError = true;
         }
-        if (!formData.ownerName) {
-            setFormErrors((prevErrors) => ({
-                ...prevErrors,
-                nameError: "Please enter Owner Name"
-            }));
-            warningNofity("Please enter Owner Name")
-            hasError = true;
-        }
+        // if (!formData.ownerName) {
+        //     setFormErrors((prevErrors) => ({
+        //         ...prevErrors,
+        //         nameError: "Please enter Owner Name"
+        //     }));
+        //     warningNofity("Please enter Owner Name")
+        //     hasError = true;
+        // }
         if (!formData.mobileNo) {
             setFormErrors((prevErrors) => ({
                 ...prevErrors,
@@ -192,13 +193,22 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                 ...prevErrors,
                 vehicleNoError: "Please enter Vehicle number"
             }));
-            warningNofity( "Please enter Vehicle number")
+            warningNofity("Please enter Vehicle number")
+            hasError = true;
+        }
+
+        if (!formData.tokenNumber || formData.tokenNumber === "") {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                tokenError: "Please enter Token number"
+            }));
+            warningNofity("Please enter Token number")
             hasError = true;
         }
         if (slotnumber === 0 && !slotnumber) {
             warningNofity("Select the Slot number")
             hasError = true;
-        }else{
+        } else {
             setFormErrors((prevErrors) => ({
                 ...prevErrors,
                 slotError: ""
@@ -223,12 +233,12 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                 ...prevErrors,
                 inputError: "Please enter the transaction id"
             }));
-            warningNofity( "Please enter the transaction id");
+            warningNofity("Please enter the transaction id");
             hasError = true;
-        } 
+        }
         return hasError;
-        
-    }, [formData, selectedFile, paymentFile, driver, slotnumber]);
+
+    }, [formData,  paymentFile, driver, slotnumber,formErrors]);
 
 
     //Insertion of new data in our case the vehicle information
@@ -252,6 +262,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                         ? `vehicle_${file.name}`
                         : `default_vehicle_${file.name}`; // New file name for default image
                     formData.append('files', new File([file], newFileName, { type: file.type }));
+                    return null
                 });
             }
 
@@ -259,6 +270,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                 compressedPaymentFile?.map((file) => {
                     const newFileName = `payment_${file.name}`;
                     formData.append('files', new File([file], newFileName, { type: file.type }));
+                    return null
                 });
             }
 
@@ -268,7 +280,16 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                 }
             });
 
-            const { success } = response.data;
+            const { success, message } = response.data;
+            if (success === 3) {
+                setFormErrors((prevErrors) => ({
+                    ...prevErrors,
+                    tokenError: message
+                }));
+                warningNofity(message)
+                setIsLoading(false)
+                return
+            }
             if (success === 2) return errorNofity("Error in inserting Data!")
             succesNofity("Inserted Successfully");
             setIsLoading(false)
@@ -280,7 +301,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
             console.log(err);
             warningNofity('An error occurred during Inserting data.');
         }
-    }, [insertdata, selectedFile, paymentFile, driver, slotnumber])
+    }, [insertdata, selectedFile, paymentFile, refetch,resetAll,setOpen,validateForm])
 
     return (
         <Box sx={{
@@ -339,8 +360,8 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                     </Suspense>
                     <Suspense fallback="loading">
                         <FormInput
-                            name="Owner Name"
-                            placeholder="Enter Owner name"
+                            name="Owner Name(optional)"
+                            placeholder="Owner name(optional)"
                             value={formData.ownerName}
                             onChange={(e) => handleInputChange(e, 'ownerName')}
                             error={!!formErrors.nameError}
@@ -374,15 +395,10 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                         <FormInput
                             name="Token Number"
                             placeholder="Enter Token Number"
-                            value={slotnumber === 0 || formData.selectZone === 0 ? "" : slotnumber}
-                            onChange={(value) => {
-                                setFormErrors((prevErrors) => ({
-                                    ...prevErrors,
-                                    slotError: value ? "" : "error",
-                                }));
-                            }}
-                            error={!!formErrors.slotError}
-                            helperText={formErrors.slotError}
+                            value={formData.tokenNumber}
+                            onChange={(e) => handleInputChange(e, 'tokenNumber')}
+                            error={!!formErrors.tokenError}
+                            helperText={formErrors.tokenError}
                             type='Number'
                         />
                     </Suspense>
@@ -475,7 +491,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
                                     </Suspense>
                                 </Box>
                                 {
-                                    formData.selectupivallet != 0 && formData.selectupivallet === 2 &&
+                                    formData.selectupivallet !== 0 && formData.selectupivallet === 2 &&
                                     <>
                                         <Suspense fallback="loading">
                                             <InputFileUpload

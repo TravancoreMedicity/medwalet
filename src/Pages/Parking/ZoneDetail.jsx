@@ -19,7 +19,9 @@ const ZoneDetail = ({ zone, vehilce }) => {
           px: 1
         }}>
         {
-          zone?.map((type, index) => {
+          zone
+          ?.sort((a, b) => (a.zone_slno) - (b.zone_slno)) 
+          .map((type, index) => {
             const count = vehilce?.filter((item) => item.zone_name === type.zone_name)
             return (
               <Grid mb={1} key={index} width={{ xs: '100%', sm: 220 }}

@@ -29,7 +29,7 @@ export default function DriverMaster() {
     let TodayData = new Date().toISOString().slice(0, 10);
     let CurrentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
 
-    const { success: userrightsuccess, data: allusersright, refetch: fetchuserright } = useQuery({
+    const {  data: allusersright } = useQuery({
         queryKey: ['getAllDriverUserRight'],
         queryFn: () => getAllDriverUserRight(),
     });
@@ -38,28 +38,13 @@ export default function DriverMaster() {
         currentDate: TodayData
     }), [TodayData]);
 
-    const { success: attendancesuccess, data: dirverAttendace, refetch: fetchDriver } = useQuery({
+    const {  data: dirverAttendace, refetch: fetchDriver } = useQuery({
         queryKey: ['dirverAttendace'],
         queryFn: () => getallPresentDriver(postData),
         onError: (error) => {
             console.log("Error fetching driver attendance:", error);
         },
     });
-
-    const handleCheckboxChange = useCallback((empid, value) => {
-        if (checkedYes.empid === empid && checkedYes.status === value) {
-            return;
-        }
-
-        const updatedCheckedYes = {
-            empid: empid,
-            status: value
-        };
-        setCheckedYes(updatedCheckedYes);
-        handleattendance(updatedCheckedYes);
-    }, [checkedYes, dirverAttendace]);
-
-
 
     const handleattendance = useCallback(async (updatedCheckedYes) => {
         if (!updatedCheckedYes || !updatedCheckedYes.empid) {
@@ -90,23 +75,39 @@ export default function DriverMaster() {
         } catch (err) {
             errorNofity("Error during attendance submission:", err);
         }
-    }, [dirverAttendace, TodayData, CurrentTime]);
+        finally {
+            fetchDriver();
+        }
+    }, [dirverAttendace, TodayData, CurrentTime,fetchDriver]);
 
+
+
+    const handleCheckboxChange = useCallback((empid, value) => {
+        if (checkedYes.empid === empid && checkedYes.status === value) {
+            return;
+        }
+        const updatedCheckedYes = {
+            empid: empid,
+            status: value
+        };
+        setCheckedYes(updatedCheckedYes);
+        handleattendance(updatedCheckedYes);
+    }, [checkedYes,handleattendance]);
 
 
     const formatteddata = useMemo(() => {
         return allusersright
             ? allusersright
-                .map(data => {
+                .map((data,index) => {
                     return {
-                        slNo: data.right_slno,
+                        slNo: index + 1,
                         Drivers: data.em_name,
                         empid: data.emp_id,
                         userid: data.user_group_id,
                     };
                 })
             : [];
-    }, [allusersright, checkedYes]);
+    }, [allusersright]);
 
 
     const colDefs = useMemo(
@@ -187,7 +188,7 @@ export default function DriverMaster() {
                 },
             },
         ],
-        [checkedYes, dirverAttendace]
+        [ dirverAttendace,handleCheckboxChange]
     );
 
 

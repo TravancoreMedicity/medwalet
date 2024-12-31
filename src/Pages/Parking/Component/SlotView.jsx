@@ -17,7 +17,7 @@ function SlotView({ setSlotNumber, count, allvehicles, zonename }) {
         if (ismatch) return warningNofity(`${slotnumber} is Already Occupied`);
         setSlotNumber(slotnumber)
         setIfseleceted(slotnumber)
-    }, [allvehicles, zonename])
+    }, [allvehicles, zonename,setSlotNumber])
     //animation key frame
     const blinkAnimation = keyframes`
     0% { opacity: 1; }
@@ -26,13 +26,13 @@ function SlotView({ setSlotNumber, count, allvehicles, zonename }) {
 `;
 
     return (
-        <Paper elevation={2} sx={{ width: '100%', minHeight: 100, bgcolor: 'white', px: 0.1, py: 1, mt: 1, borderRadius: 1, display: "flex", alignItems: 'start', flexWrap: 'wrap' }}>
+        <Paper elevation={2} sx={{ width: '100%', minHeight: 100, bgcolor: 'white', px: 1, py: 1, mt: 1, borderRadius: 1, display: "flex", alignItems: 'start', flexWrap: 'wrap' }}>
             {
                 slots?.map((_, index) => {
-                    const matchedslots = allvehicles?.find((vehicle) => vehicle.token_number === index + 1 && vehicle.zone_name === zonename);
+                    const matchedslots = allvehicles?.find((vehicle) => vehicle.slot_number === index + 1 && vehicle.zone_name === zonename);
                     return (
                         <Box key={index} sx={{
-                            width: 45,
+                            width: 50,
                             height: 50,
                             m: 0.1,
                             display: "flex",

@@ -34,6 +34,7 @@ export default function SingleVehicleModal({
     preview
 }) {
 
+
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const [loading, setLoading] = useState(false);
     const [driver, setDriver] = useState("");
@@ -202,14 +203,19 @@ export default function SingleVehicleModal({
                                                 "Vallet" : "Non-Vallet"}
                                             color={'black'}
                                         />
+                                         <TextComponent
+                                            label={"Parking Zone"}
+                                            value={selectedVehicle.zone_name}
+                                            color={'black'}
+                                        />
                                         <TextComponent
                                             label={"Token Number"}
                                             value={selectedVehicle.token_number}
                                             color={'black'}
                                         />
                                         <TextComponent
-                                            label={"Owner Name"}
-                                            value={selectedVehicle.owner_name}
+                                            label={"Slot Number"}
+                                            value={selectedVehicle.slot_number}
                                             color={'black'}
                                         />
                                         <TextComponent

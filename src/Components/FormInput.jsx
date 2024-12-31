@@ -12,7 +12,6 @@ export default function FormInput({ name, placeholder, value, onChange, helperTe
             placeholder={placeholder}
             value={value ?? ''}
             onChange={onChange}
-            disabled={name === "Token Number"}
             slotProps={{
               input: {
                 onInput: (e) => {

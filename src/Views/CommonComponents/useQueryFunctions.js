@@ -143,11 +143,11 @@ export const getAllAttendaceReport = async () => {
 
 export const calculateHeight = (opening, selectedFile) => {
     if (selectedFile.length > 0) {
-        return { xs: 625, sm: 700, md: 740, lg: 740 };
+        return { xs: 635, sm: 710, md: 760, lg: 760 };
     } else if (opening) {
-        return { xs: 530, sm: 600, md: 650, lg: 650 };
+        return { xs: 540, sm: 610, md: 670, lg: 670 };
     } else {
-        return { xs: 430, sm: 500, md: 550, lg: 550 };
+        return { xs: 440, sm: 510, md: 580, lg: 580 };
     }
 };
 
