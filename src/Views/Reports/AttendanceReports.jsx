@@ -73,7 +73,6 @@ function AttendanceReports() {
   });
 
 
-
   const handleEmployeeSearch = useCallback(async () => {
     setSelectedValue("")
     setLoadingBetweenDate(true)
@@ -119,62 +118,51 @@ function AttendanceReports() {
       : selectedValue === 'c' ? vehiclebetweendate
         : employeeDetail
 
-        
 
+  //Grouping the driver with the first checkin and out time
+  let checkInTracker = {};
+  let slNoCounter = 1;
 
+  const pairedData = MappingData?.map((entry) => {
+    const { driver_id, atendnace_time, attendnace_status, em_name } = entry;
 
-  const formattedfinalData = useMemo(() => {
-    if (!MappingData) return [];
-  
-    // Group the data by driver_id, and sort by attendance time
-    const groupedData = MappingData
-      .sort((a, b) => new Date(a.atendnace_time) - new Date(b.atendnace_time)) // Sort by attendance time
-      .reduce((acc, data) => {
-        const { driver_id, attendnace_status, atendnace_time, em_name } = data;
-  
-        // Initialize if the driver doesn't exist yet
-        if (!acc[driver_id]) {
-          acc[driver_id] = {
-            DriverName: em_name,
-            CheckInTimes: [],
-            CheckOutTimes: [],
-          };
-        }
-  
-        // Add times to check-in and check-out arrays based on status
-        if (attendnace_status === 'I') {
-          acc[driver_id].CheckInTimes.push(atendnace_time);
-        } else if (attendnace_status === 'O') {
-          acc[driver_id].CheckOutTimes.push(atendnace_time === "9999-12-31 23:59:59" ? "Not Checked Out" : atendnace_time);
-        }
-  
-        return acc;
-      }, {});
-  
-    // Format the grouped data into pairs and generate sequential slNo
-    const result = Object.values(groupedData).map((driverData, index) => {
-      const { DriverName, CheckInTimes, CheckOutTimes } = driverData;
-      const pairs = [];
-  
-      // Loop through the CheckInTimes and pair them with CheckOutTimes
-      const maxCount = Math.max(CheckInTimes.length, CheckOutTimes.length);
-      for (let i = 0; i < maxCount; i++) {
-        pairs.push({
-          slNo: pairs.length + 1, // Sequential number for each pair
-          DriverName,
-          CheckIn: CheckInTimes[i] || "Not Checked In", // Handle missing check-ins
-          Checkout: CheckOutTimes[i] || "Not Checked Out", // Handle missing check-outs
-        });
+    if (attendnace_status === 'I') {
+      checkInTracker[driver_id] = { time: atendnace_time, em_name };
+      return null;
+    } else if (attendnace_status === 'O') {
+      if (checkInTracker[driver_id]) {
+        const checkIn = checkInTracker[driver_id];
+        delete checkInTracker[driver_id];
+        return {
+          slNo: slNoCounter++,
+          DriverName: em_name,
+          CheckIn: checkIn.time,
+          Checkout: atendnace_time
+        };
+      } else {
+        return {
+          slNo: slNoCounter++,
+          DriverName: em_name,
+          CheckIn: null,
+          Checkout: atendnace_time
+        };
       }
-  
-      return pairs;
+    }
+    return {};
+  }).filter(item => item !== null);
+
+  // Add any unpaired check-ins
+  Object.keys(checkInTracker).map((driver_id) => {
+    const { time, em_name } = checkInTracker[driver_id];
+    pairedData.push({
+      slNo: slNoCounter++,
+      DriverName: em_name,
+      CheckIn: time,
+      Checkout: "Not checked out"
     });
-  
-    return result.flat().sort((a, b) => a.slNo - b.slNo); // Flatten and sort by slNo
-  }, [MappingData]);
-  
-  
-  
+
+    return null;
+  });
 
   const colDefs = useMemo(
     () => [
@@ -182,7 +170,6 @@ function AttendanceReports() {
       { field: 'DriverName', flex: 1 },
       { field: 'CheckIn', flex: 1 },
       { field: 'Checkout', flex: 1 },
-      { field: 'TotalCount', flex: 1 },
     ],
     []
   );
@@ -230,7 +217,8 @@ function AttendanceReports() {
       <Paper square elevation={0} sx={{ p: 1, mt: 0.5, display: 'flex', flexDirection: "column", width: "100%" }} >
         <MasterTable
           loading={selectedValue === 'a' ? Attendaceloading : loadingbetweenDate}
-          rowData={formattedfinalData}
+          // rowData={formattedfinalData}
+          rowData={pairedData}
           columnDefs={colDefs}
           apiRef={apiRef}
         />
