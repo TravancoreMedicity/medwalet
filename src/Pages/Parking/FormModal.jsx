@@ -16,7 +16,7 @@ const ValletForm = lazy(() => import("./ValletForm"))
 
 export default function FormModal({ refetch, allvehicles }) {
     const [open, setOpen] = useState(false);
-    const isSmallScreen = useMediaQuery('(max-width:600px)');
+    const isSmallScreen = useMediaQuery('(max-width:800px)');
 
     return (
         <>

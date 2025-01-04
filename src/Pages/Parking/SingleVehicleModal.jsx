@@ -35,7 +35,7 @@ export default function SingleVehicleModal({
 }) {
 
 
-    const isSmallScreen = useMediaQuery('(max-width:600px)');
+    const isSmallScreen = useMediaQuery('(max-width:800px)');
     const [loading, setLoading] = useState(false);
     const [driver, setDriver] = useState("");
     const [drivererror, setDriverError] = useState("");

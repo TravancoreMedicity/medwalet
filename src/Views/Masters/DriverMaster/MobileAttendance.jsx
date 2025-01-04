@@ -17,7 +17,7 @@ function MobileAttendance() {
             <Typography sx={{
                 position: 'fixed',
                 left: 6,
-                top: 75,
+                top: {xs:75,sm:80,md:90},
             }}> <Person3Icon sx={{ fontSize: 18 }} />Driver Attendace</Typography>
             <Suspense fallback="loading"><AttendaceCard /></Suspense>
         </Box>

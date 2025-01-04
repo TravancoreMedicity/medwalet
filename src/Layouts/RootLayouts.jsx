@@ -9,7 +9,7 @@ const BackButton = lazy(() => import('../Components/BackButton'))
 const RootLayouts = () => {
 
   const [open, setOpen] = useState(false);
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const isSmallScreen = useMediaQuery('(max-width:800px)');
 
 
   const toggleDrawer = (inOpen) => (event) => {

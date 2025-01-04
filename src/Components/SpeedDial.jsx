@@ -42,12 +42,12 @@ export default function ControlledOpenSpeedDial({setOpen}) {
                 ariaLabel="SpeedDial controlled open example"
                 sx={{
                     position: 'absolute',
-                    bottom: 16,
+                    bottom: {xs:16,sm:20},
                     right: 5,
-                    width: { xs: 50, sm: 60 },
+                    width: { xs: 50, sm: 60,md:90 },
                     '& .MuiSpeedDial-fab': {
-                        width: 50, 
-                        height: 50,
+                        width:  {xs:50,sm:60}, 
+                        height:   {xs:50,sm:60},
                     },
                     '& .MuiSpeedDialIcon-icon': {
                         fontSize: '1.2rem',

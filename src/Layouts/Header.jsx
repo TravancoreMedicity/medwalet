@@ -14,7 +14,7 @@ const Header = ({ toggleDrawer, isSmallScreen }) => {
     const navigate = useNavigate()
     const gotoSerachPage = () => {
         navigate("/Home/search")
-    }
+    }   
 
     const hanldelogout = () => {
         sessionStorage.removeItem('userDetl');
@@ -38,7 +38,7 @@ const Header = ({ toggleDrawer, isSmallScreen }) => {
         }}>
             <Box sx={{
                 width: { xs: '80%', sm: '45%', md: '50%', lg: '65%' }, height: '100%', display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
             }}>
                 {!isSmallScreen && (
                     <Button onClick={toggleDrawer(true)} >
@@ -92,10 +92,11 @@ const Header = ({ toggleDrawer, isSmallScreen }) => {
                         </Box>
                     ) : (
                         <Box sx={{
+                            width: '100%',
                             height: '100%',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'space-evenly',
+                            justifyContent: 'end',
                         }} >
                             <Button
                                 onClick={gotoSerachPage} >

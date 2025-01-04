@@ -35,6 +35,8 @@ function AttendaceCard() {
     });
 
 
+    
+
     const handleattendance = useCallback(async (updatedCheckedYes) => {
 
         if (!updatedCheckedYes || !updatedCheckedYes.empid) {
@@ -68,6 +70,9 @@ function AttendaceCard() {
             }
         } catch (err) {
             warningNofity("Error during attendance submission:", err);
+        }
+        finally {
+            fetchDriver();
         }
     }, [dirverAttendace, TodayData, CurrentTime,fetchDriver]);
 

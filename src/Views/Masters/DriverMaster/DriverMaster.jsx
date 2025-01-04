@@ -81,7 +81,6 @@ export default function DriverMaster() {
     }, [dirverAttendace, TodayData, CurrentTime,fetchDriver]);
 
 
-
     const handleCheckboxChange = useCallback((empid, value) => {
         if (checkedYes.empid === empid && checkedYes.status === value) {
             return;
