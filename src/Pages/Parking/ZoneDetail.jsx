@@ -1,0 +1,64 @@
+import { Box, Typography } from '@mui/material'
+import React, { memo } from 'react'
+import { Grid } from '@mui/joy';
+
+const ZoneDetail = ({ zone, vehilce }) => {
+  return (
+    <Box>
+      <Grid
+        container
+        py={1}
+        gap={0.5}
+        sx={{
+          width: '100%',
+          minHeight: 200,
+          display: 'flex',
+          flexDirection:
+            { lg: 'row', md: 'row', sm: 'row', xs: 'column' },
+          flexWrap: 'wrap',
+          px: 1
+        }}>
+        {
+          zone
+          ?.sort((a, b) => (a.zone_slno) - (b.zone_slno)) 
+          .map((type, index) => {
+            const count = vehilce?.filter((item) => item.zone_name === type.zone_name)
+            return (
+              <Grid mb={1} key={index} width={{ xs: '100%', sm: 220 }}
+                sx={{
+                  display: 'flex',
+                  height: '100%',
+                  alignItems: "center",
+                  justifyContent: 'center',
+                  flexGrow: 1,
+                }}>
+                <Box sx={{
+                  height: { xs: 50, sm: 80, md: 120 },
+                  backgroundColor: 'white',
+                  borderRadius: 2,
+                  filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))',
+                  display: 'flex',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  bgcolor: '#CF81B9',
+                  flex: 1
+                }}>
+                  <Box sx={{ width: '100%', height: '100%', py: 2, px: 2, display: 'flex', alignItems: 'center', justifyContent: { xs: 'space-between', sm: 'space-between', md: 'center' }, flexDirection: { sm: 'column', md: 'column' } }}>
+                    <Typography sx={{ fontSize: { xs: 15, sm: 19, md: 18, lg: 20 }, color: 'white' }}>{type?.zone_name}</Typography>
+                    <Typography sx={{ fontSize: { xs: 15, sm: 18, md: 18, lg: 20 }, fontWeight: 500, color: 'white' }}>{type?.slot_count-count?.length}/{type?.slot_count}</Typography>
+                  </Box>
+                </Box>
+              </Grid>
+            )
+          })
+        }
+      </Grid>
+    </Box>
+  )
+}
+
+export default memo(ZoneDetail);
+
+
+
+
