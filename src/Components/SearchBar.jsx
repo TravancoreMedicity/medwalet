@@ -27,12 +27,12 @@ function SearchBar() {
     const handleVehicleSelect = useCallback((vehicle) => {
         setSelectedVehicle(vehicle);
         setOpenModal(true);
-    });
+    },[]);
 
     const handleCloseModal = useCallback(() => {
         setOpenModal(false);
         setSelectedVehicle(null);
-    });
+    },[]);
 
     const hanldesearch = useCallback(async () => {
         try {
@@ -48,8 +48,7 @@ function SearchBar() {
                 setFilteredData(filteredData);
             }
         } catch (error) {
-            console.log(error);
-            errorNofity("error in searching data")
+            errorNofity("error in searching data",error)
         }
     }, [searchinput]);
 

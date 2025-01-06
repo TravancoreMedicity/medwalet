@@ -111,7 +111,7 @@ export default function ZoneMaster() {
                     refetch()
                 }
             } catch (err) {
-                console.log(err);
+                warningNofity(err);
             }
         } else {
             try {
@@ -133,7 +133,7 @@ export default function ZoneMaster() {
                     refetch()
                 }
             } catch (err) {
-                console.log(err);
+                warningNofity(err);
             }
         }
     }, [zonename, updateData, insertData, updateflag, resetFeild, refetch])

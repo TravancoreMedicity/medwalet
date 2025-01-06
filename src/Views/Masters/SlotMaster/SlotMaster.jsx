@@ -25,7 +25,7 @@ export default function SlotMaster() {
   const [zoneslno, setZoneSlNo] = useState(null);
 
 
-  const { success, data: allzonemaster } = useQuery({
+  const {  data: allzonemaster } = useQuery({
     queryKey: ['allzonemaster'],
     queryFn: () => getAllZoneMaster(),
   })
@@ -45,7 +45,7 @@ export default function SlotMaster() {
     zone_slno: zoneslno,
     slot_status: slotstatus ? 1 : 0,
     create_user:employeeID()
-  }))
+  }),[slotcount,zoneslno,slotstatus])
 
 
   const updateData = useMemo(()=>( {
@@ -54,16 +54,16 @@ export default function SlotMaster() {
     slot_status: slotstatus ? 1 : 0,
     create_user: employeeID(),
     slot_slno: updatedata.slNo
-  }))
+  }),[slotcount,zoneslno,slotstatus,updatedata])
 
   
   const resetField = useCallback(() => {
     setSlotCount(0)
     setSlotStatus(false)
     setZoneSlNo(null)
-  })
+  },[])
 
-  const { success: slotmastersuccess, data: allsloteMaster, refetch } = useQuery({
+  const {  data: allsloteMaster, refetch } = useQuery({
     queryKey: ['alluserMaster'],
     queryFn: () => getAllSlotMaster(),
   })
@@ -104,7 +104,7 @@ export default function SlotMaster() {
           refetch()
         }
       } catch (err) {
-        console.log(err);
+        warningNofity(err);
       }
     } else {
       try {
@@ -126,10 +126,10 @@ export default function SlotMaster() {
           refetch()
         }
       } catch (err) {
-        console.log(err);
+        warningNofity(err);
       }
     }
-  },[insertData,updateData,slotcount,zoneslno]);
+  },[insertData,updateData,slotcount,zoneslno,refetch,updateflag,resetField]);
 
   //defining the column for the master table
   const [colDefs] = useState([

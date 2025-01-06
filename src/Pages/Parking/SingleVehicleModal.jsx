@@ -78,8 +78,7 @@ export default function SingleVehicleModal({
             handleclose()
             refetch()
         } catch (err) {
-            console.log(err);
-            errorNofity("Error occured in Submitting Data")
+            errorNofity("Error occured in Submitting Data",err)
         }
     }, [driverempid, handleCloseModal, handleclose, refetch, drivererror]);
 

@@ -1,6 +1,7 @@
 import { differenceInSeconds } from 'date-fns';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 import imageCompression from 'browser-image-compression';
+import { warningNofity } from '../../Constant/Constant';
 
 export const getDepartment = async () => {
     return axioslogin.get('/deptmaster/status').then((res) => {
@@ -164,7 +165,7 @@ export const HandleImageCompression = async (files) => {
         );
         return compressedFiles;
     } catch (error) {
-        console.log("error in compressing image");
+        warningNofity("error in compressing image");
     }
 };
 

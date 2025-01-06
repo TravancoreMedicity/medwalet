@@ -44,7 +44,7 @@ function AttendanceReports() {
         setLoadingBetweenDate(false)
         setTodayVehicle(data)
       } catch (error) {
-        console.log("Error fetching today's vehicles:", error);
+        warningNofity("Error fetching today's vehicles:", error);
       }
       setVehicleBetweenDate([])
       setDriver("")
@@ -108,7 +108,7 @@ function AttendanceReports() {
       setVehicleBetweenDate(data)
       setLoadingBetweenDate(false)
     } catch (error) {
-      console.log("Error fetching today's vehicles:", error);
+      warningNofity("Error fetching today's vehicles:", error);
     }
   }, [start, end]);
 

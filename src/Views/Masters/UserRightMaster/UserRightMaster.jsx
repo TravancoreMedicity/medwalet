@@ -139,7 +139,7 @@ export default function UserRightMaster() {
                     fetchuserright()
                 }
             } catch (err) {
-                console.log(err);
+                warningNofity(err);
             }
         }
     }, [updateData, InsertionData,departmentid,SectionId,userid,fetchuserright,resetall,updateFlag])

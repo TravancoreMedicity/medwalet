@@ -104,8 +104,7 @@ function Loginform() {
       succesNofity(message)
       navigate('/Home/Dashboard')
     } catch (err) {
-      console.log('Error during login:', err);
-      errorNofity('Internal server Error')
+      errorNofity('Internal server Error', err)
     }
   }, [useLoginDetail,userInput.empid,userInput.password,navigate]);
 
@@ -198,7 +197,7 @@ function Loginform() {
           fontWeight: { xs: 200, sm: 400 },
           color: 'black'
         }}
-        onClick={() => console.log("clicked me")}>Forget Password?</Link>
+        >Forget Password?</Link>
     </Paper>
   )
 }

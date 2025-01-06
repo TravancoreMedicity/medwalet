@@ -10,7 +10,7 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import { axioslogin } from '../../../AxiosConfig/Axiox';
 import { useQuery } from '@tanstack/react-query';
-import { getAllUserMaster, getAllZoneMaster } from '../../CommonComponents/useQueryFunctions';
+import { getAllUserMaster } from '../../CommonComponents/useQueryFunctions';
 import EditIcon from '@mui/icons-material/Edit';
 
 
@@ -22,7 +22,7 @@ export default function UserMaster() {
 
 
 
-    
+
     const resetField = () => {
         setUserName("")
         setUserStatus(false)
@@ -31,21 +31,25 @@ export default function UserMaster() {
         return employeeID();
     }, []);
 
-    const insertData = {
-        user_name: username,
-        user_status: userstatus ? 1 : 0,
-        create_user: getemployeeid
-    }
+    const insertData = useMemo(() => {
+        return {
+            user_name: username,
+            user_status: userstatus ? 1 : 0,
+            create_user: getemployeeid
+        }
+    },[getemployeeid,userstatus,username])
 
-    const updateData = {
-        user_name: username,
-        user_status: userstatus ? 1 : 0,
-        edit_user: getemployeeid,
-        user_slno: updatedata.slNo
-    }
+    const updateData = useMemo(() => {
+        return {
+            user_name: username,
+            user_status: userstatus ? 1 : 0,
+            edit_user: getemployeeid,
+            user_slno: updatedata.slNo
+        }
+    },[username,userstatus,getemployeeid,updatedata])
 
 
-    const { success, data: alluserMaster, refetch } = useQuery({
+    const { data: alluserMaster, refetch } = useQuery({
         queryKey: ['alluserMaster'],
         queryFn: () => getAllUserMaster(),
     })
@@ -82,7 +86,7 @@ export default function UserMaster() {
                     refetch()
                 }
             } catch (err) {
-                console.log(err);
+                warningNofity(err);
             }
         } else {
             try {
@@ -104,10 +108,10 @@ export default function UserMaster() {
                     refetch()
                 }
             } catch (err) {
-                console.log(err);
+                warningNofity(err);
             }
         }
-    })
+    }, [insertData, updateData, username, updateflag, refetch])
 
     const [colDefs] = useState([
         { field: 'slNo', flex: 1 },

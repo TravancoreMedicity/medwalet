@@ -298,8 +298,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
             setOpen(false)
 
         } catch (err) {
-            console.log(err);
-            warningNofity('An error occurred during Inserting data.');
+            warningNofity('An error occurred during Inserting data.',err);
         }
     }, [insertdata, selectedFile, paymentFile,refetch,resetAll,setOpen,validateForm])
 
