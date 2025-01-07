@@ -133,10 +133,10 @@ export default function SlotMaster() {
 
   //defining the column for the master table
   const [colDefs] = useState([
-    { field: 'slNo' },
-    { field: 'Slotcount' },
-    { field: 'zonemaster' },
-    { field: 'Status' },
+    { field: 'slNo', flex:1},
+    { field: 'Slotcount', flex:1},
+    { field: 'zonemaster',flex:1 },
+    { field: 'Status',flex:1 },
     {
       headerName: 'Edit',
       field: 'edit',

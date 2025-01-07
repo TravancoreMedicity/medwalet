@@ -12,6 +12,19 @@ export default function ZoneComponent({
   slotselect
 }) {
 
+
+  
+  const groupedByZone = zone
+  .reduce((acc, vehicle) => {
+      const zone = vehicle.zone_name || "Unknown Zone";
+      if (!acc[zone]) {
+          acc[zone] = [];
+      }
+      acc[zone].push(vehicle);
+      return acc;
+  }, {});
+
+
   return (
     <Box sx={{
       width: '100%', maxHeight: 220, mb: 1, py: 1, px: 1, mt: 2,
@@ -24,22 +37,25 @@ export default function ZoneComponent({
       <Typography sx={{ fontSize: 18 }}>Zone </Typography>
       <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
         {
-          zone?.map((item, index) => {
+          Object.entries(groupedByZone)?.map(([key, value]) => {
+            const zoneSlno = value[0]?.zone_slno;
             return (
-              <Box key={index} sx={{ width: '100%' }}>
+              <Box 
+              key={key}
+               sx={{ width: '100%' }}>
                 <Checkbox
                   sx={{ boxShadow: 3, bgcolor: '#e5e5e5', py: 1, borderRadius: 3, width: '100%', px: 1 }}
-                  key={index}
-                  label={item.zone_name}
-                  checked={selected === item.zone_slno}
-                  onChange={(e) => onChange(item.zone_slno)}
+                  key={key}
+                  label={key}
+                  checked={selected === zoneSlno}
+                  onChange={(e) => onChange(zoneSlno)}
                 />
-                {slotselect === item.zone_slno &&
+                {slotselect === zoneSlno &&
                   <Suspense fallback="loading...!">
                     <SlotView
-                      zonename={item.zone_name}
+                      zonename={key}
                       allvehicles={allvehicles}
-                      count={item.slot_count}
+                      count={value}
                       setSlotNumber={setSlotNumber}
                       selected={selected}
                     />

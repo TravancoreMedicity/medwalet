@@ -6,10 +6,11 @@ import { warningNofity } from '../../../Constant/Constant';
 
 
 function SlotView({ setSlotNumber, count, allvehicles, zonename }) {
+    
 
 
     const [ifselected, setIfseleceted] = useState(0);
-    const slots = new Array(count).fill(null);
+    // const slots = new Array(count).fill(null);
     const handlevehicle = useCallback((slotnumber) => {
         const ismatch = allvehicles?.find(
             (vehicle) => vehicle.token_number === slotnumber && vehicle.zone_name === zonename
@@ -28,8 +29,8 @@ function SlotView({ setSlotNumber, count, allvehicles, zonename }) {
     return (
         <Paper elevation={2} sx={{ width: '100%', minHeight: 100, bgcolor: 'white', px: 1, py: 1, mt: 1, borderRadius: 1, display: "flex", alignItems: 'start', flexWrap: 'wrap' }}>
             {
-                slots?.map((_, index) => {
-                    const matchedslots = allvehicles?.find((vehicle) => vehicle.slot_number === index + 1 && vehicle.zone_name === zonename);
+                count?.map((item, index) => {
+                    const matchedslots = allvehicles?.find((vehicle) => vehicle.slot_number === item?.slot_count && vehicle.zone_name === item?.zone_name);
                     return (
                         <Box key={index} sx={{
                             width: 50,
@@ -41,13 +42,13 @@ function SlotView({ setSlotNumber, count, allvehicles, zonename }) {
                             flexDirection: 'column',
                             borderRadius: 2,
                             border: !matchedslots ? '1px solid green' : '1px solid grey',
-                            bgcolor: matchedslots ? "#adb5bd" : (ifselected === index + 1 ? 'orange' : ""),
+                            bgcolor: matchedslots ? "#adb5bd" : (ifselected === item?.slot_count ? 'orange' : ""),
                             cursor:'pointer'
-                        }} onClick={() => handlevehicle(index + 1)}>
+                        }} onClick={() => handlevehicle(item?.slot_count)}>
                             <Typography sx={{
                                 fontSize: 11,
                                 color: matchedslots ? 'white' : 'green'
-                            }}>{index + 1}</Typography>
+                            }}>{item?.slot_count}</Typography>
                             <DirectionsCarIcon sx={{
                                 animation: !matchedslots && ifselected !== index + 1 ? `${blinkAnimation} 1s infinite` : 'none',
                                 mt: 0,
