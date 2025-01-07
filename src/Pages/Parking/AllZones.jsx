@@ -29,6 +29,7 @@ export default function AllZones({ allvehicles, isLoading, isError, refetch }) {
         return acc;
     }, {});
 
+    
 
     return (
         <Box >
