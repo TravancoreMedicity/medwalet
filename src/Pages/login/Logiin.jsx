@@ -34,7 +34,6 @@ function Login() {
                     justifyContent: { xs: 'end', sm: 'center' },
                     flexDirection: 'column',
                     textAlign: 'center',
-                    paddingTop: 2,
                     paddingTop: { sm: 10, md: 0 },
                 }}>
                     <Box sx={{ width: { xs: 200, sm: 220 }, height: { xs: 180, sm: 150 } }} >
@@ -63,11 +62,9 @@ function Login() {
                 <Box sx={{
                     height: '100%',
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: { xs: 'end', sm: 'center' },
+                    // justifyContent: { xs: 'end', sm: 'center' },
                     flexDirection: 'column',
                     textAlign: 'center',
-                    paddingTop: 2,
                     paddingTop: { sm: 10, md: 0 },
                     alignItems: { lg: 'flex-start', sm: 'center', xs: 'center' },
                     justifyContent: { xs: 'flex-start', sm: 'center' },

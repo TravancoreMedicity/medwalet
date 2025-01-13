@@ -1,8 +1,7 @@
 import * as React from 'react';
 import Skeleton from '@mui/material/Skeleton';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+
 
 export default function LoginSkeleton() {
   return (

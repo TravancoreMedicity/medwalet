@@ -34,7 +34,6 @@ export default function SingleVehicleModal({
     preview
 }) {
 
-
     const isSmallScreen = useMediaQuery('(max-width:800px)');
     const [loading, setLoading] = useState(false);
     const [driver, setDriver] = useState("");
@@ -78,20 +77,36 @@ export default function SingleVehicleModal({
             handleclose()
             refetch()
         } catch (err) {
-            errorNofity("Error occured in Submitting Data",err)
+            errorNofity("Error occured in Submitting Data", err)
         }
     }, [driverempid, handleCloseModal, handleclose, refetch, drivererror]);
+
+
 
 
     const hanldeImageUpload = useCallback(async (path) => {
         if (selectedFile.length === 0) return warningNofity("Please select the images!")
         try {
             setLoading(true)
-            const compressedVehicleImage = await HandleImageCompression(selectedFile);
+            const imagefiles = selectedFile?.filter(items => items.type !== "video/mp4" && items.type !== "video/quicktime");
+            const compressedVehicleImage = await HandleImageCompression(imagefiles);
+
+            const allselectedfiles = [
+                ...(selectedFile?.filter(
+                    (file) =>
+                        !compressedVehicleImage?.some(
+                            (compressed) =>
+                                compressed.name === file.name &&
+                                compressed.lastModified === file.lastModified
+                        )
+                ) || []),
+                ...(compressedVehicleImage || [])
+            ];
+
             const formData = new FormData();
             formData.append('filePath', path)
-            if (compressedVehicleImage.length > 0) {
-                compressedVehicleImage?.map((file) => {
+            if (selectedFile?.length > 0) {
+                allselectedfiles?.map((file) => {
                     const newFileName = `vehicle_${file.name}`
                     formData.append('files', new File([file], newFileName, { type: file.type }));
                     return null
@@ -103,14 +118,19 @@ export default function SingleVehicleModal({
                 }
             });
             const { success } = response.data;
-            if (success === 2) return errorNofity("Error in inserting Data!")
+            if (success === 2) {
+                errorNofity("Error in inserting Data!")
+                setLoading(false)
+                return
+            }
             setLoading(false)
             handleclose()
             succesNofity("Uploaded Successfully");
             handleCloseModal()
             refetch()
         } catch (error) {
-            errorNofity("Server Error occured")
+            setLoading(false)
+            errorNofity("Error occured", error)
         }
 
     }, [selectedFile, handleCloseModal, handleclose, refetch])
@@ -164,6 +184,7 @@ export default function SingleVehicleModal({
                             sx={{ m: 1 }}
                         />
                         {selectedVehicle && (
+
                             <>
                                 <Box sx={{
                                     width: '100%',
@@ -186,7 +207,8 @@ export default function SingleVehicleModal({
                                         }}>
                                         <NewSwiperComponent
                                             id={selectedVehicle.registration_slno}
-                                            url={selectedVehicle?.images}
+                                            img={selectedVehicle?.images}
+                                            vedio={selectedVehicle?.vedio}
                                             detail={selectedVehicle}
                                         />
                                     </Box>
@@ -202,7 +224,7 @@ export default function SingleVehicleModal({
                                                 "Vallet" : "Non-Vallet"}
                                             color={'black'}
                                         />
-                                         <TextComponent
+                                        <TextComponent
                                             label={"Parking Zone"}
                                             value={selectedVehicle.zone_name}
                                             color={'black'}
@@ -237,7 +259,7 @@ export default function SingleVehicleModal({
                                         <Divider sx={{ mt: 1 }} />
                                         <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
                                             <Button
-                                                disabled={opening === 'a' || selectedVehicle?.images.length >= 5 || loading}
+                                                disabled={opening === 'a' || selectedVehicle?.vedio.length + selectedVehicle?.images.length >= 5 || loading}
                                                 color={opening === 'a' ? "neutral" : "success"}
                                                 sx={{
                                                     width: opening === 'a' ? '100%' : '48%',
@@ -246,7 +268,7 @@ export default function SingleVehicleModal({
                                                 }}
                                                 onClick={() => setOpening('a')}>
                                                 {
-                                                    selectedVehicle?.images.length + selectedFile.length >= 5
+                                                  selectedVehicle?.vedio.length + selectedVehicle?.images.length + selectedFile.length >= 5
                                                         ? "Limit Exeeded" : "upload"
                                                 }
                                             </Button>
@@ -271,7 +293,7 @@ export default function SingleVehicleModal({
                                                         setPreview={setPreview}
                                                         preview={preview}
                                                         current={isSmallScreen}
-                                                        limit={selectedVehicle?.images.length}
+                                                        limit={selectedVehicle?.images.length + selectedVehicle?.vedio.length}
                                                     />
                                                     <Box
                                                         sx={{
@@ -286,9 +308,9 @@ export default function SingleVehicleModal({
                                                             sx={{ width: '48%', mt: 1 }}>
                                                             {loading
                                                                 ? "Processing"
-                                                                : (selectedVehicle?.images.length >= 5 || (selectedVehicle?.images.length + selectedFile.length) >= 5
+                                                                : (selectedVehicle?.images.length >= 5 || (selectedVehicle?.images.length + selectedFile.length + selectedVehicle?.vedio.length) >= 5
                                                                     ? "Limit Exeeded"
-                                                                    : `upload ${5 - (selectedVehicle?.images.length + selectedFile.length)} more`)
+                                                                    : `upload ${5 - (selectedVehicle?.images.length + selectedFile.length + selectedVehicle?.vedio.length)} more`)
                                                             }
                                                         </Button>
                                                         <Button

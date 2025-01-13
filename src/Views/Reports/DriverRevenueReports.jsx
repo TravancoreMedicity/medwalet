@@ -1,7 +1,7 @@
 import { Paper } from '@mui/material'
 import React, { lazy, memo, Suspense, useCallback, useMemo, useRef, useState } from 'react'
 import { getAllVehicles } from '../CommonComponents/useQueryFunctions'
-import { useQuery } from '@tanstack/react-query';
+import {  useQuery } from '@tanstack/react-query';
 import MasterTable from '../CommonComponents/MasterTable';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 import { errorNofity, warningNofity } from '../../Constant/Constant';
@@ -23,10 +23,10 @@ function DriverRevenueReports() {
   const [loadingbetweenDate, setLoadingBetweenDate] = useState(false)
 
 
-  const { success, data: allvehicles, refetch, isLoading: allvehilceLoading } = useQuery({
+  const {  data: allvehicles, isLoading: allvehilceLoading } = useQuery({
     queryKey: ['allvehicles'],
     queryFn: () => getAllVehicles(),
-    enabled: selectedValue == 'a'
+    enabled: selectedValue === 'a'
   })
 
   const handleChange = useCallback(async (event) => {
@@ -50,7 +50,7 @@ function DriverRevenueReports() {
       setVehicleBetweenDate([])
       setTodayVehicle([])
     }
-  });
+  },[]);
 
   const filterindData = selectedValue === "a" && allvehicles
     ? allvehicles : selectedValue === 'b' ?
@@ -63,20 +63,27 @@ function DriverRevenueReports() {
     if (!acc[driver]) {
       acc[driver] = { count: 0, data: [] };
     }
-    acc[driver].data.push(vehicle);
-    acc[driver].count += 1;
+    // acc[driver].data.push(vehicle);
+    // acc[driver].count += 1;
+    // return acc;
+
+    acc[driver] = {
+      ...acc[driver],
+      data:[...acc[driver].data,vehicle],
+      count: acc[driver].count + 1,
+    }
     return acc;
   }, {});
 
   const FormatteddriverTotalRevenue = useMemo(() => {
     if (!allvehicles) return [];
-    return Object.values(GroupByEmployee).map((data, index) => ({
+    return Object.values(GroupByEmployee)?.map((data, index) => ({
       slNo: index + 1,
       DriverName: data?.data[0]?.em_name,
       VehicleCount: data.count,
       TotalAmount: data.count * 100
     }));
-  })
+  },[GroupByEmployee,allvehicles])
 
   const getVehicleFromStartAndEnd = useCallback(async () => {
     setLoadingBetweenDate(true)
@@ -88,13 +95,15 @@ function DriverRevenueReports() {
       const response = await axioslogin.post('/medvehilces/getvehicleBetweenData', BothDate);
       const { success, data } = response.data;
       if (success === 1 && data.length === 0) {
-        warningNofity("No data found")
+        warningNofity("No data found ")
         setLoadingBetweenDate(false)
+        setVehicleBetweenDate([])
         return
       }
       setVehicleBetweenDate(data)
       setLoadingBetweenDate(false)
     } catch (error) {
+      setVehicleBetweenDate([])
       errorNofity("Error fetching today's vehicles:", error);
     }
   }, [start, end]);

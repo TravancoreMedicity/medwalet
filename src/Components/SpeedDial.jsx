@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
@@ -12,20 +12,30 @@ const actions = [
     { icon: <EditNoteIcon />, name: 'Attendace' },
 ];
 
-export default function ControlledOpenSpeedDial({setOpen}) {
+export default function ControlledOpenSpeedDial({ setOpen }) {
     const navigate = useNavigate()
-    const [open, setAddOpen] = React.useState(false);
+    const [open, setAddOpen] = useState(false);
     const handleOpen = () => setAddOpen(true);
+    //model close
     const handleClose = (name) => {
-        if(name === 'Addnew' ){
+        if (name === 'Addnew') {
             setOpen(true)
         }
-        if(name === 'Attendace' ){
+        if (name === 'Attendace') {
             navigate('/Driver/mobile')
         }
-       
         setAddOpen(false)
     };
+
+
+    const { empid } = useMemo(() => {
+        return JSON.parse(sessionStorage.getItem('userDetl'));
+    }, []);
+
+
+    const filteredActions = empid === 3804 || empid === 168
+        ? actions
+        : [{ icon: <DirectionsCarIcon />, name: 'Addnew' }]
 
     return (
         <Box sx={{
@@ -42,29 +52,29 @@ export default function ControlledOpenSpeedDial({setOpen}) {
                 ariaLabel="SpeedDial controlled open example"
                 sx={{
                     position: 'absolute',
-                    bottom: {xs:16,sm:20},
+                    bottom: { xs: 16, sm: 20 },
                     right: 5,
-                    width: { xs: 50, sm: 60,md:90 },
+                    width: { xs: 50, sm: 60, md: 90 },
                     '& .MuiSpeedDial-fab': {
-                        width:  {xs:50,sm:60}, 
-                        height:   {xs:50,sm:60},
+                        width: { xs: 50, sm: 60 },
+                        height: { xs: 50, sm: 60 },
                     },
                     '& .MuiSpeedDialIcon-icon': {
                         fontSize: '1.2rem',
                     },
-                   
+
                 }}
                 icon={<SpeedDialIcon />}
                 onClose={handleClose}
                 onOpen={handleOpen}
                 open={open}
             >
-                {actions.map((action) => (
+                {filteredActions?.map((action) => (
                     <SpeedDialAction
                         key={action.name}
                         icon={action.icon}
                         tooltipTitle={action.name}
-                        onClick={()=>handleClose(action.name)}
+                        onClick={() => handleClose(action.name)}
                     />
                 ))}
             </SpeedDial>

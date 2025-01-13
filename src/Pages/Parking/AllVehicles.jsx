@@ -24,7 +24,7 @@ export default function AllVehicles({ vehicles, refetch }) {
   const handleVehicleSelect = useCallback((vehicle) => {
     setSelectedVehicle(vehicle)
     setOpenModal(true)
-  },[])
+  }, [])
   //helps for the modal closing...!
   const handleCloseModal = useCallback(() => {
     setOpenModal(false);
@@ -32,7 +32,7 @@ export default function AllVehicles({ vehicles, refetch }) {
     setSelectedVehicle(null);
     setSelectedFile([])
     setPreview([])
-  },[])
+  }, [])
 
   return (
     <Box
@@ -43,7 +43,7 @@ export default function AllVehicles({ vehicles, refetch }) {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-      
+
       <Grid
         container
         py={2}
@@ -57,8 +57,11 @@ export default function AllVehicles({ vehicles, refetch }) {
             const imageforshowing =
               item?.images.length > 0
                 ? `${PUBLIC_NAS_FOLDER}/MedVallet/ImageofVehicle/${item.file_path}/${item?.images[0]}`
-                : noimage;
-
+                : null;
+            const vedioforshowing =
+              item?.vedio.length > 0
+                ? `${PUBLIC_NAS_FOLDER}/MedVallet/ImageofVehicle/${item.file_path}/${item?.vedio[0]}`
+                : null
             return (
               <Grid
                 mb={1}
@@ -92,16 +95,43 @@ export default function AllVehicles({ vehicles, refetch }) {
                     position: 'relative',
                     p: 0.5
                   }}>
-                    <img
-                      src={imageforshowing}
-                      loading='lazy'
-                      style={{
-                        borderRadius: 3,
-                        height: '100%',
-                        width: '100%',
-                        objectFit: 'cover'
-                      }}
-                      alt="" />
+                    {
+                      imageforshowing ? (
+                        <img
+                          src={imageforshowing}
+                          loading='lazy'
+                          style={{
+                            borderRadius: 3,
+                            height: '100%',
+                            width: '100%',
+                            objectFit: 'cover'
+                          }}
+                          alt="" />
+                      ) : vedioforshowing ? (
+                        <video
+                          src={vedioforshowing}
+                          controls
+                          style={{
+                            borderRadius: 3,
+                            height: '100%',
+                            width: '100%',
+                            objectFit: 'cover'
+                          }}
+                          alt="Vehicle Video"
+                        />
+                      ) : (
+                        <img
+                          src={noimage}
+                          loading='lazy'
+                          style={{
+                            borderRadius: 3,
+                            height: '100%',
+                            width: '100%',
+                            objectFit: 'cover'
+                          }}
+                          alt="" />
+                      )
+                    }
                   </Box>
                   <Box
                     sx={{

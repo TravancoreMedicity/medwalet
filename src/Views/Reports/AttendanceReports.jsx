@@ -152,7 +152,7 @@ function AttendanceReports() {
   }).filter(item => item !== null);
 
   // Add any unpaired check-ins
-  Object.keys(checkInTracker).map((driver_id) => {
+  Object.keys(checkInTracker)?.map((driver_id) => {
     const { time, em_name } = checkInTracker[driver_id];
     pairedData.push({
       slNo: slNoCounter++,
@@ -160,9 +160,9 @@ function AttendanceReports() {
       CheckIn: time,
       Checkout: "Not checked out"
     });
-
     return null;
   });
+
 
   const colDefs = useMemo(
     () => [

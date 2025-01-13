@@ -14,13 +14,13 @@ export default function ZoneComponent({
 
 
   
-  const groupedByZone = zone
-  .reduce((acc, vehicle) => {
+  const groupedByZone = 
+  zone?.reduce((acc, vehicle) => {
       const zone = vehicle.zone_name || "Unknown Zone";
       if (!acc[zone]) {
           acc[zone] = [];
       }
-      acc[zone].push(vehicle);
+      acc[zone] = [...(acc[zone] || []), vehicle]
       return acc;
   }, {});
 

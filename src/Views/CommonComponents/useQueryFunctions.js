@@ -3,6 +3,8 @@ import { axioslogin } from '../../AxiosConfig/Axiox';
 import imageCompression from 'browser-image-compression';
 import { warningNofity } from '../../Constant/Constant';
 
+
+
 export const getDepartment = async () => {
     return axioslogin.get('/deptmaster/status').then((res) => {
         const { success, data } = res.data;
@@ -170,6 +172,9 @@ export const HandleImageCompression = async (files) => {
 };
 
 
+
+
+
 export const calculateTotalTime = (create_date) => {
     const createdDate = new Date(create_date);
     const currentDate = new Date();
@@ -181,3 +186,32 @@ export const calculateTotalTime = (create_date) => {
     return `${hours} hr : ${minutes} min : ${seconds} sec`;
 }
 
+
+
+//check vedio duration for file uploading
+
+export const checkVideoDuration = (file) => {
+    return new Promise((resolve, reject) => {
+        //creating temporary vedio  element to load  the vedio file .
+        //   check the durationonce the metadata is fully loaded.
+        const videoElement = document.createElement('video');
+
+        // creates a temporary URL for the video file that is provided as input.
+        // This temporary URL is used to load the video into the video element 
+        // without needing to upload the file to a server first.
+        videoElement.src = URL.createObjectURL(file);
+
+        //this will check the duration fo the file
+        videoElement.onloadedmetadata = () => {
+            if (videoElement.duration > 20) {
+                reject("Duration exceeds 10 seconds.");
+            } else {
+                resolve();
+            }
+        };
+        // Throw an error  during the video loading process
+        videoElement.onerror = () => {
+            reject("Error loading video file.");
+        };
+    });
+};

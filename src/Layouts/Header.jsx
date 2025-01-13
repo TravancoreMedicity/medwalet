@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Button, Tooltip, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -10,21 +10,22 @@ import { useNavigate } from 'react-router-dom';
 const newlogo = require("../assets/logo/medlogo.png")
 
 const Header = ({ toggleDrawer, isSmallScreen }) => {
-
     const navigate = useNavigate()
     const gotoSerachPage = () => {
         navigate("/Home/search")
-    }   
-
+    }
     const hanldelogout = () => {
         sessionStorage.removeItem('userDetl');
         navigate('/')
     }
+    const { empid } = useMemo(() => {
+        return JSON.parse(sessionStorage.getItem('userDetl'));
+    }, []);
 
     return (
         <Box sx={{
             width: '100%',
-            height: '7vh',
+            height: isSmallScreen ? 55 :75 ,
             boxShadow: 5,
             display: 'flex',
             alignItems: 'center',
@@ -34,13 +35,14 @@ const Header = ({ toggleDrawer, isSmallScreen }) => {
             top: 0,
             zIndex: 1100,
             bgcolor: '#53B6E7',
-            px: 1
+            px: 1,
+            mb:1
         }}>
             <Box sx={{
                 width: { xs: '80%', sm: '45%', md: '50%', lg: '65%' }, height: '100%', display: 'flex',
                 alignItems: 'center',
             }}>
-                {!isSmallScreen && (
+                {!isSmallScreen && (empid === 3804 || empid === 168) && (
                     <Button onClick={toggleDrawer(true)} >
                         <MenuIcon sx={{ color: "white" }} />
                     </Button>

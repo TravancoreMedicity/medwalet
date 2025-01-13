@@ -5,6 +5,7 @@ import { Box, styled } from '@mui/joy';
 import Badge from '@mui/material/Badge';
 import { Typography } from '@mui/material';
 import { warningNofity } from '../../Constant/Constant';
+import { checkVideoDuration } from '../../Views/CommonComponents/useQueryFunctions';
 
 
 const VisuallyHiddenInput = styled('input')`
@@ -32,6 +33,7 @@ export default function InputFileUpload({
   limit
 }) {
 
+
   const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
       right: -3,
@@ -57,57 +59,87 @@ export default function InputFileUpload({
     }
   }
 
-  
-  
-
   const handleFileChange = (e) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const validExtensions = ['image/jpeg', 'image/png', 'image/jpg'];
+    const validExtensions = [
+      'image/jpeg',
+      'image/png',
+      'image/jpg',
+      'video/mp4',
+      'video/webm',
+      'video/quicktime',
+    ];
+
     const hasInvalidFiles = Array.from(files).some(
       (file) => !validExtensions.includes(file.type)
     );
 
     if (hasInvalidFiles) {
-      warningNofity("Only JPG, JPEG, and PNG formats are allowed!");
+      warningNofity("Only JPG, JPEG, and PNG  formats are allowed!");
       return;
     }
 
     const newFiles = Array.from(files);
-    const newPreviews = newFiles?.map((file) => URL.createObjectURL(file))
+    const newPreviews = newFiles?.map((file) => ({
+      url: URL.createObjectURL(file),
+      type: file.type
+    }))
 
-    if( selectedFile && selectedFile?.length + newFiles?.length > 5 -limit ){
-      if(limit + selectedFile?.length >= 5) {
-        warningNofity(` Maximum files Uploaded.`);
-      }else{
-        warningNofity(` Only Select ${ 5 - limit} Files.`);
-      }  
-      return;
+
+
+    const validateFiles = async () => {
+      const videoValidationPromises = newFiles.map((file) => {
+        if (file.type.startsWith('video/')) {
+          return checkVideoDuration(file); // Reuse the imported function
+        }
+        return Promise.resolve(); // Non-video files can be accepted directly
+      });
+      try {
+        await Promise.all(videoValidationPromises);
+
+        if (selectedFile && selectedFile?.length + newFiles?.length > 5 - limit) {
+          if (limit + selectedFile?.length >= 5) {
+            warningNofity(` Maximum files Uploaded.`);
+          } else {
+            warningNofity(` Only Select ${5 - limit} Files.`);
+          }
+          return;
+        }
+
+        if (selectedFile && selectedFile.length + newFiles.length > 5) {
+          warningNofity("You can upload a maximum of 5 files.");
+          return;
+        }
+        if (paymentFile && paymentFile.length + newFiles.length > 2) {
+          warningNofity("You can upload a maximum of 2 payment files.");
+          return;
+        }
+
+        if (selectedFile) {
+          setSelectedFile((prev) => [...prev, ...newFiles])
+          setPreview((prev) => [...prev, ...newPreviews])
+        }
+
+        if (paymentFile) {
+          setPaymentFile((prev) => [...prev, ...newFiles])
+          setPayPreview((prev) => [...prev, ...newPreviews])
+        }
+      } catch (error) {
+        warningNofity(error);
+      }
     }
 
-    if (selectedFile && selectedFile.length + newFiles.length > 5) {
-      warningNofity("You can upload a maximum of 5 files.");
-      return;
-    }
-    if (paymentFile && paymentFile.length + newFiles.length > 2) {
-      warningNofity("You can upload a maximum of 2 payment files.");
-      return;
-    }
-
-    if (selectedFile) {
-      setSelectedFile((prev) => [...prev, ...newFiles])
-      setPreview((prev) => [...prev, ...newPreviews])
-    }
-
-    if (paymentFile) {
-      setPaymentFile((prev) => [...prev, ...newFiles])
-      setPayPreview((prev) => [...prev, ...newPreviews])
-    }
+    validateFiles();
     // Optionally 
     //The below code helps to clean up the object URL on component unmount
     return () => newFiles.forEach((file) => URL.revokeObjectURL(file));;
   };
+
+
+
+
 
   return (
     <div>
@@ -145,17 +177,18 @@ export default function InputFileUpload({
 
       <Box
         sx={{
-          py:selectedFile?.length > 0  || paymentFile?.length > 0 ? 1 :0,
+          py: selectedFile?.length > 0 || paymentFile?.length > 0 ? 1 : 0,
           display: 'flex',
           flexWrap: 'wrap',
           gap: 1,
-          height:selectedFile?.length > 0  || paymentFile?.length > 0 ? 80 : 0,
-           overflowY: 'auto',
-           '&::-webkit-scrollbar': {
-             display: 'none',
-           },
+          height: selectedFile?.length > 0 || paymentFile?.length > 0 ? 80 : 0,
+          overflowY: 'auto',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
         }}>
-        {preview?.map((preview, index) => (
+        {preview?.map((item, index) =>
+        (
           <StyledBadge
             key={index}
             sx={{
@@ -163,8 +196,8 @@ export default function InputFileUpload({
             }} >
             <Box
               sx={{
-                width: current? 70 :100,
-                height:current? 70 :100 ,
+                width: current ? 70 : 100,
+                height: current ? 70 : 100,
                 mb: 1,
                 position: 'relative',
               }}>
@@ -179,15 +212,28 @@ export default function InputFileUpload({
                 }}>
                 ❌
               </Typography>
-              <img
-                src={preview}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-                alt={`File preview ${index}`}
-              />
+              {item.type.startsWith('video/') ? (
+                <video
+                  controls
+                  style={{
+                    width: '80%',
+                    height: '80%',
+                    objectFit: 'cover',
+                  }}
+                >
+                  <source src={item.url} type={item.type} />
+                </video>
+              ) : (
+                <img
+                  src={item.url}
+                  style={{
+                    width: '80%',
+                    height: '80%',
+                    objectFit: 'cover',
+                  }}
+                  alt={`File preview ${index}`}
+                />
+              )}
             </Box>
           </StyledBadge>
         ))}
