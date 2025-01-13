@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import 'react-toastify/dist/ReactToastify.css';
-import { Flip, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 export const screenHeight = window.innerHeight;
 export const screenWidth = window.innerWidth;

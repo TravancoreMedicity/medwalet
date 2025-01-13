@@ -11,7 +11,10 @@ import {
 } from '../../Constant/Constant'
 import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
-import { getAllSlotMaster, HandleImageCompression } from '../../Views/CommonComponents/useQueryFunctions';
+import {
+    getAllSlotMaster,
+    HandleImageCompression,
+} from '../../Views/CommonComponents/useQueryFunctions';
 import { useQuery } from '@tanstack/react-query';
 import { axioslogin } from '../../AxiosConfig/Axiox';
 
@@ -37,6 +40,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
     const [slotnumber, setSlotNumber] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
+
     const [formData, setFormData] = useState({
         selectedVallet: 1,
         selectZone: 0,
@@ -58,17 +62,15 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
     });
 
 
-
-
     const validate_mobilenumber = useCallback((mobileNo) => {
         if (!isValidMobileNumber(mobileNo)) return "Mobile number should be 10 digits long"
         return ''
-    },[])
+    }, [])
     const validate_VehicleNumber = useCallback((vehicleNo) => {
         if (!isValidVehicleNumber(vehicleNo)) return 'No contain special characters and Spaces';
         if (vehicleNo.length > 15) return 'Enter a valid Vehicle number'
         return '';
-    },[])
+    }, [])
 
     //handle all states
     const handleInputChange = useCallback((e, field) => {
@@ -156,7 +158,7 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
     }, [formData.selectedVallet, formData.selectZone, formData.ownerName, formData.mobileNo, formData.vehicleNo, slotnumber, formData.driver_empid, formData.selectupivallet, formData.paymentAttachment, formData.paymentid, formData.tokenNumber])
 
 
-    
+
 
     //validation function which checks all the required or mandatory fields are mentioned and created as per the reqiurements
     const validateForm = useCallback(() => {
@@ -239,7 +241,9 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
         }
         return hasError;
 
-    }, [formData,  paymentFile, driver, slotnumber,formErrors]);
+    }, [formData, paymentFile, driver, slotnumber, formErrors]);
+
+
 
 
     //Insertion of new data in our case the vehicle information
@@ -250,22 +254,40 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
             setIsLoading(true);
             const defaultnoimage = new File([defaulimage], "defaultnoimage.png", { type: 'image/png' });
 
-            const compressedVehicleImage = selectedFile.length > 0 ? await HandleImageCompression(selectedFile) : [defaultnoimage];
+            const imagefiles = selectedFile?.filter(items => items.type !== "video/mp4");
+            const compressedVehicleImage = imagefiles?.length > 0 ? await HandleImageCompression(imagefiles) : [defaultnoimage];
+ 
+            const allSelectedFiles = [
+                ...(selectedFile?.filter(
+                    (file) =>
+                        !compressedVehicleImage?.some(
+                            (compressed) =>
+                                compressed.name === file.name &&
+                                compressed.lastModified === file.lastModified
+                        )
+                ) || []),
+                ...(compressedVehicleImage?.includes(defaultnoimage) ? [] : compressedVehicleImage || [])
+            ];
+
+
 
             const compressedPaymentFile = await HandleImageCompression(paymentFile);
             const formData = new FormData()
             formData.append('postData', JSON.stringify(insertdata))
 
             // the map is used to send multiple files 
-            if (compressedVehicleImage.length > 0) {
-                compressedVehicleImage?.map((file) => {
-                    const newFileName = selectedFile.length > 0
+            if (selectedFile?.length > 0) {
+                allSelectedFiles?.map((file) => {
+                    const newFileName = selectedFile?.length > 0
                         ? `vehicle_${file.name}`
                         : `default_vehicle_${file.name}`; // New file name for default image
                     formData.append('files', new File([file], newFileName, { type: file.type }));
                     return null
                 });
             }
+
+
+          
 
             if (paymentFile.length > 0) {
                 compressedPaymentFile?.map((file) => {
@@ -299,9 +321,10 @@ export default function ValletForm({ refetch, allvehicles, setOpen }) {
             setOpen(false)
 
         } catch (err) {
-            warningNofity('An error occurred during Inserting data.',err);
+            warningNofity('An error occurred during Inserting data.', err);
+            setIsLoading(false)
         }
-    }, [insertdata, selectedFile, paymentFile,refetch,resetAll,setOpen,validateForm])
+    }, [insertdata, selectedFile, paymentFile, refetch, resetAll, setOpen, validateForm])
 
     return (
         <Box sx={{

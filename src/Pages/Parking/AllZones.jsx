@@ -25,7 +25,7 @@ export default function AllZones({ allvehicles, isLoading, isError, refetch }) {
         if (!acc[zone]) {
             acc[zone] = [];
         }
-        acc[zone].push(vehicle);
+        acc[zone] = [...(acc[zone] || []), vehicle]
         return acc;
     }, {});
 

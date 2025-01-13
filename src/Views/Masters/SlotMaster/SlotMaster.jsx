@@ -13,8 +13,8 @@ import { axioslogin } from '../../../AxiosConfig/Axiox';
 import EditIcon from '@mui/icons-material/Edit';
 
 
- const MasterHeader = lazy(() => import('../../../Components/MasterHeader'));
- const MasterTable = lazy(() => import('../../CommonComponents/MasterTable'));
+const MasterHeader = lazy(() => import('../../../Components/MasterHeader'));
+const MasterTable = lazy(() => import('../../CommonComponents/MasterTable'));
 
 
 export default function SlotMaster() {
@@ -25,7 +25,7 @@ export default function SlotMaster() {
   const [zoneslno, setZoneSlNo] = useState(null);
 
 
-  const {  data: allzonemaster } = useQuery({
+  const { data: allzonemaster } = useQuery({
     queryKey: ['allzonemaster'],
     queryFn: () => getAllZoneMaster(),
   })
@@ -40,35 +40,35 @@ export default function SlotMaster() {
     : [];
 
 
-  const insertData = useMemo(()=>({
+  const insertData = useMemo(() => ({
     slot_count: slotcount,
     zone_slno: zoneslno,
     slot_status: slotstatus ? 1 : 0,
-    create_user:employeeID()
-  }),[slotcount,zoneslno,slotstatus])
+    create_user: employeeID()
+  }), [slotcount, zoneslno, slotstatus])
 
 
-  const updateData = useMemo(()=>( {
+  const updateData = useMemo(() => ({
     slot_count: slotcount,
     zone_slno: zoneslno,
     slot_status: slotstatus ? 1 : 0,
     create_user: employeeID(),
     slot_slno: updatedata.slNo
-  }),[slotcount,zoneslno,slotstatus,updatedata])
+  }), [slotcount, zoneslno, slotstatus, updatedata])
 
-  
+
   const resetField = useCallback(() => {
     setSlotCount(0)
     setSlotStatus(false)
     setZoneSlNo(null)
-  },[])
+  }, [])
 
-  const {  data: allsloteMaster, refetch } = useQuery({
+  const { data: allsloteMaster, refetch } = useQuery({
     queryKey: ['alluserMaster'],
     queryFn: () => getAllSlotMaster(),
   })
 
-    // the data is formated for easily displaying it in the Master Table
+  // the data is formated for easily displaying it in the Master Table
   const formattedslotMaster = allsloteMaster ?
     allsloteMaster.map((slot) => ({
       slNo: slot.slot_slno,
@@ -80,9 +80,9 @@ export default function SlotMaster() {
 
 
 
-    //insertion and updation of the slot master
+  //insertion and updation of the slot master
   const handleGroupsave = useCallback(async () => {
-    if (slotcount === null || zoneslno === "") {
+    if (slotcount === 0 || zoneslno === "") {
       return warningNofity("Please Fill the Blank Fields")
     }
     if (updateflag === 0) {
@@ -98,11 +98,11 @@ export default function SlotMaster() {
         const data = result.data;
         if (data.success === 2) {
           errorNofity("Error in creating User!")
-        } else {
-          succesNofity("Successfull Created !")
-          resetField()
-          refetch()
+          return
         }
+        succesNofity("Successfull Created !")
+        resetField()
+        refetch()
       } catch (err) {
         warningNofity(err);
       }
@@ -119,24 +119,24 @@ export default function SlotMaster() {
         const data = result.data;
         if (data.success === 2) {
           errorNofity("Error updating User!")
-        } else {
-          succesNofity("Updated successfully !")
-          setUpdateFlag(0)
-          resetField()
-          refetch()
+          return
         }
+        succesNofity("Updated successfully !")
+        setUpdateFlag(0)
+        resetField()
+        refetch()
       } catch (err) {
         warningNofity(err);
       }
     }
-  },[insertData,updateData,slotcount,zoneslno,refetch,updateflag,resetField]);
+  }, [insertData, updateData, slotcount, zoneslno, refetch, updateflag, resetField]);
 
   //defining the column for the master table
   const [colDefs] = useState([
-    { field: 'slNo', flex:1},
-    { field: 'Slotcount', flex:1},
-    { field: 'zonemaster',flex:1 },
-    { field: 'Status',flex:1 },
+    { field: 'slNo', flex: 1 },
+    { field: 'Slotcount', flex: 1 },
+    { field: 'zonemaster', flex: 1 },
+    { field: 'Status', flex: 1 },
     {
       headerName: 'Edit',
       field: 'edit',
@@ -151,7 +151,7 @@ export default function SlotMaster() {
 
   //fetching the data for updation
   const getEdit = useCallback((params) => {
-    const rowData = params.data;    
+    const rowData = params.data;
     setSlotCount(rowData.Slotcount);
     setSlotStatus(rowData.Status === "Active" ? true : false);
     setZoneSlNo(rowData.zone_sl);
@@ -176,7 +176,7 @@ export default function SlotMaster() {
 
             />
             <Input
-              value={slotcount === 0 ? "":slotcount}
+              value={slotcount === 0 ? "" : slotcount}
               onChange={(e) => setSlotCount(e.target.value)}
               sx={{ width: '100%' }}
               placeholder='Enter the Slot Count' />

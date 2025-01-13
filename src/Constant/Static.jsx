@@ -1,6 +1,8 @@
 // ----------- Api Address ---------------
 // export const API_URL = 'http://192.168.10.88:6000/api';
 export const API_URL = 'http://192.168.22.8:5000/api';
+// export const API_URL = "https://localhost:5000/api";
+
 // ----------- Nas Folder --------------
 // export const PUBLIC_NAS_FOLDER = "http://192.168.22.10";
 export const PUBLIC_NAS_FOLDER = "http://192.168.22.8/Meliora";

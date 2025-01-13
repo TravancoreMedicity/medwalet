@@ -12,7 +12,7 @@ const ReportComponents = ({ children, title, displayClose, data, path ,onDownloa
 
     const toRedirectToHome = useCallback(async () => {
         navigate(path)
-    }, [path])
+    }, [navigate,path])
 
     return (
         <Box sx={{ flex: 1, p: 1 }} >
